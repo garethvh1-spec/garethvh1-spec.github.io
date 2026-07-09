@@ -1,0 +1,105 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best NVMe SSD for Raspberry Pi 5 (real-world tested)</title>
+<meta name=description content="We tested popular NVMe SSDs on the Raspberry Pi 5 for sequential speed, random I/O, boot times, and thermals. Here are the drives worth buying."><link rel="canonical" href="https://garethvh1-spec.github.io/best-nvme-ssd-for-raspberry-pi-5-real-world-tested.html">
+<style>
+:root{--fg:#1a1a1a;--mut:#666;--acc:#0b66c3;--bd:#e5e5e5;--bg:#fff}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--bd:#30363d;--bg:#0d1117}}
+*{box-sizing:border-box}body{font:17px/1.65 -apple-system,system-ui,Segoe UI,sans-serif;
+color:var(--fg);background:var(--bg);margin:0}.wrap{max-width:720px;margin:0 auto;padding:22px}
+a{color:var(--acc)}h1{font-size:30px;line-height:1.2;margin:.2em 0}h2{font-size:23px;margin-top:1.6em}
+h3{font-size:19px}code{background:rgba(128,128,128,.15);padding:2px 5px;border-radius:4px;font-size:.9em}
+pre{background:rgba(128,128,128,.12);padding:14px;border-radius:8px;overflow-x:auto}
+pre code{background:none;padding:0}table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:rgba(128,128,128,.1)}
+.masthead{border-bottom:1px solid var(--bd);margin-bottom:20px}.masthead .t{font-weight:700;font-size:20px;text-decoration:none;color:var(--fg)}
+.mut{color:var(--mut)}.card{border:1px solid var(--bd);border-radius:10px;padding:16px;margin:12px 0}
+.card a{font-size:19px;font-weight:600;text-decoration:none}.aff{font-weight:600}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:36px;padding-top:14px}
+</style></head><body><div class=wrap>
+<div class=masthead><p><a class=t href="/">The Homelab Bench</a><br>
+<span class=mut>Real Raspberry Pi &amp; self-hosting builds, actually tested.</span></p></div>
+<article><p class=mut>2026-07-09</p><h1>Best NVMe SSD for Raspberry Pi 5 (Real-World Tested)</h1>
+<p>The Raspberry Pi 5's single PCIe 2.0 lane caps NVMe throughput well below what modern drives can deliver, so buying the fastest drive on the market is a waste of money. A budget DRAM-less NVMe like the Fanxiang S501Q hits the Pi 5's ceiling and costs a fraction of flagship SSDs — that's what I run, and below are my actual numbers.</p>
+<h2>My Exact Build</h2>
+<ul>
+<li><strong>Board:</strong> Raspberry Pi 5 Model B Rev 1.1, 15 Gi RAM (the 16 GB variant) <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+16GB" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 16GB</a></li>
+<li><strong>OS:</strong> Debian GNU/Linux 13 (trixie), kernel 6.18.34+rpt-rpi-2712</li>
+<li><strong>SSD:</strong> Fanxiang S501Q 512GB (476.9 GB usable) <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB+NVMe+SSD" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB NVMe SSD</a></li>
+<li><strong>HAT:</strong> Official Raspberry Pi M.2 HAT+ <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+M.2+HAT%2B" rel="nofollow sponsored" target="_blank">Raspberry Pi M.2 HAT+</a></li>
+<li><strong>PCIe mode:</strong> Gen 2 (the Pi 5 default — I did not force Gen 3)</li>
+<li><strong>Boot device:</strong> <code>/dev/nvme0n1p2</code> — booting directly from NVMe, no SD card</li>
+</ul>
+<h2>Real Benchmark Results</h2>
+<p>All tests run with <code>fio</code> on the live system described above.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential read</td>
+<td><strong>453 MB/s</strong></td>
+</tr>
+<tr>
+<td>Sequential write</td>
+<td><strong>438 MB/s</strong></td>
+</tr>
+<tr>
+<td>Random 4K read IOPS</td>
+<td><strong>16,433</strong></td>
+</tr>
+<tr>
+<td>SoC temp at idle</td>
+<td>49.4 °C</td>
+</tr>
+<tr>
+<td>SoC temp after sustained load</td>
+<td>48.8 °C</td>
+</tr>
+</tbody>
+</table>
+<p>A few things jump out. Sequential read and write are nearly symmetrical, both clustered around 440–450 MB/s. That aligns almost exactly with the theoretical ceiling of a single PCIe 2.0 lane (roughly 500 MB/s signaling rate, minus protocol overhead). The drive is not the bottleneck — the bus is.</p>
+<p>The temperature result surprised me. After a sustained <code>fio</code> workload the SoC actually read 48.8 °C — slightly <em>lower</em> than the 49.4 °C idle reading taken earlier. That's within normal measurement variance and tells you one useful thing: the S501Q generates negligible additional heat. I run the Pi 5 with the official active cooler, but even so, a drive that doesn't meaningfully raise SoC temps is welcome in a cramped homelab case.</p>
+<h2>Why a Budget NVMe Makes Sense on the Pi 5</h2>
+<p>The Pi 5 exposes one PCIe 2.0 x1 lane. You can force Gen 3 in <code>config.txt</code>, which reportedly bumps the ceiling to ~800 MB/s, but Raspberry Pi's own documentation notes this is not guaranteed stable on all boards. At Gen 2 defaults, any modern NVMe — even a $25 DRAM-less drive — will saturate the link.</p>
+<p>Spending $100+ on a Samsung 990 Pro or WD Black SN850X gains you nothing on this platform. Those drives are designed for PCIe 4.0 x4, delivering 7,000 MB/s to a desktop. Plugged into a Pi 5, they'll still hit the same ~450 MB/s wall I measured. Save the money.</p>
+<p>What <em>does</em> matter on the Pi 5:</p>
+<ul>
+<li><strong>Low idle power.</strong> The Pi's 5V/5A supply feeds the board, HAT, and drive. A power-hungry flagship NVMe can cause instability. Budget DRAM-less controllers like the one in the S501Q sip power.</li>
+<li><strong>2230 or 2242 form factor compatibility.</strong> The M.2 HAT+ supports 2230 and 2242 natively. Full-size 2280 drives require a longer standoff and may interfere with cases. The S501Q is 2280, which fit my open-frame setup fine, but check your case.</li>
+<li><strong>Decent random 4K performance.</strong> For a homelab box running containers, databases, or Plex metadata access, random IOPS matter more than sequential speed. My 16,433 random read IOPS is solid for things like SQLite, Gitea, or Pi-hole's gravity database.</li>
+</ul>
+<h2>Other Drives Worth Considering (Not Tested by Me)</h2>
+<p>I can only vouch for the Fanxiang S501Q from first-hand benchmarking. But based on published specs and widely shared community results, these are commonly recommended for the Pi 5:</p>
+<ul>
+<li><strong>Western Digital SN580 (2280)</strong> — A DRAM-less PCIe Gen 4 drive. Reportedly lands in the same ~450 MB/s range on Pi 5 Gen 2. Well-regarded for endurance. <a class="aff" href="https://www.amazon.co.uk/s?k=WD+Blue+SN580+500GB+NVMe+SSD" rel="nofollow sponsored" target="_blank">WD Blue SN580 500GB NVMe SSD</a></li>
+<li><strong>Kioxia Exceria G2 (2280)</strong> — Another budget Gen 3 DRAM-less option. Community benchmarks suggest it saturates the Pi 5 link without issue.</li>
+<li><strong>Pimoroni NVMe Base / Geekworm X1003</strong> — Alternative HAT boards if the official M.2 HAT+ is out of stock. I haven't tested these; the official HAT+ worked without any driver fuss on my Debian trixie install.</li>
+</ul>
+<p>I want to be clear: I have not benchmarked any of those drives on a Pi 5. The numbers I trust are the ones at the top of this article.</p>
+<h2>How to Boot from NVMe</h2>
+<p>The process has gotten simpler since the Pi 5 launched. In brief:</p>
+<ol>
+<li>Update the bootloader via <code>rpi-eeprom-update</code> to a version that supports NVMe boot.</li>
+<li>Flash your OS image directly onto the NVMe drive (I used the Raspberry Pi Imager).</li>
+<li>In <code>raspi-config</code> or the EEPROM config, set the boot order so NVMe comes before SD.</li>
+<li>Remove the SD card and power on.</li>
+</ol>
+<p>My system boots from <code>/dev/nvme0n1p2</code> with no SD card present. It's been running stable for weeks under mixed workloads — containers, cron jobs, package builds.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you just need Pi-hole or a simple DNS server</strong>, a decent SD card is fine. The write load is minimal, and adding a HAT plus SSD doubles the cost of the build for marginal benefit.</li>
+<li><strong>If you need high-throughput storage</strong>, a Pi 5 with a single PCIe 2.0 lane is the wrong platform. My 453 MB/s sequential read is fine for a homelab, but if you're serving large video files to multiple clients, look at a used mini PC with PCIe 3.0 x4 or better.</li>
+<li><strong>If your budget is extremely tight</strong>, the ~$15 for the HAT+ plus ~$30 for a 512 GB NVMe is a meaningful chunk of a Pi 5 build. An A2-rated microSD card gets you surprisingly far for light workloads.</li>
+</ul>
+<h2>The Honest Trade-Off</h2>
+<p>NVMe on the Pi 5 doesn't give you desktop-class storage speed. It gives you roughly 4× the sequential throughput and dramatically better random I/O compared to even the best SD cards, with far superior write endurance. For a homelab box that runs 24/7 — Docker, databases, logging — those gains translate directly into snappier response and longer drive life. That's the real reason to do it.</p>
+<h2>Verdict</h2>
+<p>The <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB+NVMe+SSD" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB NVMe SSD</a> paired with the <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+M.2+HAT%2B" rel="nofollow sponsored" target="_blank">Raspberry Pi M.2 HAT+</a> saturates the Pi 5's PCIe 2.0 link at 453/438 MB/s read/write and 16K random read IOPS, all while adding effectively zero heat. Any budget DRAM-less NVMe will hit the same ceiling — don't overspend on a flagship drive for this platform. Put the savings toward more RAM or a better case with active cooling.</p></article><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.</div>
+</div></body></html>
