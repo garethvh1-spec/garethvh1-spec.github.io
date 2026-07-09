@@ -23,10 +23,10 @@ th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:
 <p>The Raspberry Pi 5's single PCIe 2.0 lane caps NVMe throughput well below what modern drives can deliver, so buying the fastest drive on the market is a waste of money. A budget DRAM-less NVMe like the Fanxiang S501Q hits the Pi 5's ceiling and costs a fraction of flagship SSDs — that's what I run, and below are my actual numbers.</p>
 <h2>My Exact Build</h2>
 <ul>
-<li><strong>Board:</strong> Raspberry Pi 5 Model B Rev 1.1, 15 Gi RAM (the 16 GB variant) <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+16GB" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 16GB</a></li>
+<li><strong>Board:</strong> Raspberry Pi 5 Model B Rev 1.1, 15 Gi RAM (the 16 GB variant) <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+16GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 16GB</a></li>
 <li><strong>OS:</strong> Debian GNU/Linux 13 (trixie), kernel 6.18.34+rpt-rpi-2712</li>
-<li><strong>SSD:</strong> Fanxiang S501Q 512GB (476.9 GB usable) <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB+NVMe+SSD" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB NVMe SSD</a></li>
-<li><strong>HAT:</strong> Official Raspberry Pi M.2 HAT+ <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+M.2+HAT%2B" rel="nofollow sponsored" target="_blank">Raspberry Pi M.2 HAT+</a></li>
+<li><strong>SSD:</strong> Fanxiang S501Q 512GB (476.9 GB usable) <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB+NVMe+SSD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB NVMe SSD</a></li>
+<li><strong>HAT:</strong> Official Raspberry Pi M.2 HAT+ <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+M.2+HAT%2B&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi M.2 HAT+</a></li>
 <li><strong>PCIe mode:</strong> Gen 2 (the Pi 5 default — I did not force Gen 3)</li>
 <li><strong>Boot device:</strong> <code>/dev/nvme0n1p2</code> — booting directly from NVMe, no SD card</li>
 </ul>
@@ -76,7 +76,7 @@ th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:
 <h2>Other Drives Worth Considering (Not Tested by Me)</h2>
 <p>I can only vouch for the Fanxiang S501Q from first-hand benchmarking. But based on published specs and widely shared community results, these are commonly recommended for the Pi 5:</p>
 <ul>
-<li><strong>Western Digital SN580 (2280)</strong> — A DRAM-less PCIe Gen 4 drive. Reportedly lands in the same ~450 MB/s range on Pi 5 Gen 2. Well-regarded for endurance. <a class="aff" href="https://www.amazon.co.uk/s?k=WD+Blue+SN580+500GB+NVMe+SSD" rel="nofollow sponsored" target="_blank">WD Blue SN580 500GB NVMe SSD</a></li>
+<li><strong>Western Digital SN580 (2280)</strong> — A DRAM-less PCIe Gen 4 drive. Reportedly lands in the same ~450 MB/s range on Pi 5 Gen 2. Well-regarded for endurance. <a class="aff" href="https://www.amazon.co.uk/s?k=WD+Blue+SN580+500GB+NVMe+SSD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">WD Blue SN580 500GB NVMe SSD</a></li>
 <li><strong>Kioxia Exceria G2 (2280)</strong> — Another budget Gen 3 DRAM-less option. Community benchmarks suggest it saturates the Pi 5 link without issue.</li>
 <li><strong>Pimoroni NVMe Base / Geekworm X1003</strong> — Alternative HAT boards if the official M.2 HAT+ is out of stock. I haven't tested these; the official HAT+ worked without any driver fuss on my Debian trixie install.</li>
 </ul>
@@ -99,7 +99,7 @@ th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:
 <h2>The Honest Trade-Off</h2>
 <p>NVMe on the Pi 5 doesn't give you desktop-class storage speed. It gives you roughly 4× the sequential throughput and dramatically better random I/O compared to even the best SD cards, with far superior write endurance. For a homelab box that runs 24/7 — Docker, databases, logging — those gains translate directly into snappier response and longer drive life. That's the real reason to do it.</p>
 <h2>Verdict</h2>
-<p>The <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB+NVMe+SSD" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB NVMe SSD</a> paired with the <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+M.2+HAT%2B" rel="nofollow sponsored" target="_blank">Raspberry Pi M.2 HAT+</a> saturates the Pi 5's PCIe 2.0 link at 453/438 MB/s read/write and 16K random read IOPS, all while adding effectively zero heat. Any budget DRAM-less NVMe will hit the same ceiling — don't overspend on a flagship drive for this platform. Put the savings toward more RAM or a better case with active cooling.</p></article><p><a href="/">← all articles</a></p>
+<p>The <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB+NVMe+SSD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB NVMe SSD</a> paired with the <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+M.2+HAT%2B&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi M.2 HAT+</a> saturates the Pi 5's PCIe 2.0 link at 453/438 MB/s read/write and 16K random read IOPS, all while adding effectively zero heat. Any budget DRAM-less NVMe will hit the same ceiling — don't overspend on a flagship drive for this platform. Put the savings toward more RAM or a better case with active cooling.</p></article><p><a href="/">← all articles</a></p>
 <div class=disc>Some links are affiliate links — if you buy through them I may earn a small
 commission at no extra cost to you. Benchmarks are run on my own hardware.</div>
 </div></body></html>
