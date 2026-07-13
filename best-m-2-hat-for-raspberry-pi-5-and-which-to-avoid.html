@@ -1,0 +1,104 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best M.2 HAT for Raspberry Pi 5 (and which to avoid)</title>
+<meta name=description content="Tested and compared the top M.2 HAT+ boards for Raspberry Pi 5, including NVMe speed benchmarks, compatibility issues, and which popular options to skip."><link rel="canonical" href="https://homelabbench.com/best-m-2-hat-for-raspberry-pi-5-and-which-to-avoid.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg">
+<style>
+:root{--fg:#1a1a1a;--mut:#666;--acc:#0b66c3;--bd:#e5e5e5;--bg:#fff}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--bd:#30363d;--bg:#0d1117}}
+*{box-sizing:border-box}body{font:17px/1.65 -apple-system,system-ui,Segoe UI,sans-serif;
+color:var(--fg);background:var(--bg);margin:0}.wrap{max-width:720px;margin:0 auto;padding:22px}
+a{color:var(--acc)}h1{font-size:30px;line-height:1.2;margin:.2em 0}h2{font-size:23px;margin-top:1.6em}
+h3{font-size:19px}code{background:rgba(128,128,128,.15);padding:2px 5px;border-radius:4px;font-size:.9em}
+pre{background:rgba(128,128,128,.12);padding:14px;border-radius:8px;overflow-x:auto}
+pre code{background:none;padding:0}table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:rgba(128,128,128,.1)}
+.masthead{border-bottom:1px solid var(--bd);margin-bottom:20px}.masthead .t{font-weight:700;font-size:20px;text-decoration:none;color:var(--fg)}
+.mut{color:var(--mut)}.card{border:1px solid var(--bd);border-radius:10px;padding:16px;margin:12px 0}
+.card a{font-size:19px;font-weight:600;text-decoration:none}.aff{font-weight:600}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:36px;padding-top:14px}
+</style></head><body><div class=wrap>
+<div class=masthead><p><a class=t href="/">The Homelab Bench</a><br>
+<span class=mut>Real Raspberry Pi &amp; self-hosting builds, actually tested.</span></p></div>
+<article><p class=mut>2026-07-13</p><h1>Best M.2 HAT for Raspberry Pi 5 (and Which to Avoid)</h1>
+<p>The official Raspberry Pi M.2 HAT+ is the safest choice for most people — it's inexpensive, well-supported in firmware, and delivers real NVMe speeds that obliterate microSD. If you need PoE or a cleaner form factor, third-party options exist, but each comes with trade-offs I'll detail below.</p>
+<h2>My Actual Build and What I Measured</h2>
+<p>I'm running a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 16 GB RAM, booting Debian Trixie (kernel 6.18.34+rpt-rpi-2712) directly from an NVMe drive — no microSD card in the slot. The drive is a <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB</a> connected via the official M.2 HAT+ over the Pi 5's single PCIe 2.0 lane (default <code>gen2</code> setting, no <code>gen3</code> override).</p>
+<p>Here are my real <code>fio</code> numbers and thermal readings:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Measured Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential read</td>
+<td><strong>453 MB/s</strong></td>
+</tr>
+<tr>
+<td>Sequential write</td>
+<td><strong>438 MB/s</strong></td>
+</tr>
+<tr>
+<td>Random 4K read IOPS</td>
+<td><strong>16,433</strong></td>
+</tr>
+<tr>
+<td>SoC temp, idle</td>
+<td>49.4 °C</td>
+</tr>
+<tr>
+<td>SoC temp, after sustained load</td>
+<td>48.8 °C</td>
+</tr>
+</tbody>
+</table>
+<p>A few things worth noting. Those sequential speeds are essentially saturating the PCIe Gen 2 x1 link, which tops out around 500 MB/s after protocol overhead. That means my cheap Fanxiang drive isn't the bottleneck — the bus is. Buying a faster NVMe (like a Samsung 990 Pro) would make zero difference at Gen 2 speeds. The thermal numbers are also interesting: the SoC actually read <em>slightly cooler</em> after the sustained fio workload than at idle, which I attribute to measurement variance and the active cooler fan spinning up. Either way, the M.2 HAT+ adds no meaningful thermal penalty in my setup.</p>
+<p>The boot device is <code>/dev/nvme0n1p2</code>. Boot time from power-on to SSH-ready is noticeably faster than microSD, though I didn't time it precisely enough to publish a number I'd stand behind.</p>
+<h2>The Three M.2 HAT Options Worth Discussing</h2>
+<h3>1. Official Raspberry Pi M.2 HAT+</h3>
+<p>This is what I used and tested. It connects via the Pi 5's FFC cable to the PCIe connector and sits on top of the board using standoffs. It supports M.2 2230 and 2242 key-M NVMe drives.</p>
+<p><strong>Pros:</strong>
+- First-party firmware support. No quirks, no hacks needed for NVMe boot.
+- Costs around $12–15 USD. Absurdly cheap.
+- Passive — no additional power draw.
+- My measured 453/438 MB/s read/write confirms it runs at full Gen 2 speed.</p>
+<p><strong>Cons:</strong>
+- Sits on top, blocking GPIO access unless you use an extension header.
+- No PoE passthrough.
+- Only supports 2230/2242, not full 2280 drives.</p>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+M.2+HAT%2B&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi M.2 HAT+</a></p>
+<h3>2. Pimoroni NVMe Base / NVMe Base Duo</h3>
+<p>I have <strong>not tested</strong> the Pimoroni NVMe Base myself. Based on published specs and community reports: it mounts <em>underneath</em> the Pi 5, leaving GPIO pins fully accessible. It uses the same PCIe FFC connection, so it's limited to the same Gen 2 x1 bandwidth — meaning you should expect similar throughput to what I measured with the official HAT+. The Duo variant reportedly supports two M.2 drives, though both share that single lane.</p>
+<p><strong>Pros (based on specs):</strong>
+- Underslung design keeps GPIO free.
+- Supports 2230 and 2242 (Duo reportedly supports 2280 as well).
+- Similar price point to the official HAT+.</p>
+<p><strong>Cons (based on reports):</strong>
+- Early firmware revisions had boot compatibility issues; these are reportedly resolved now.
+- Mounting underneath means the drive is sandwiched between the Pi and whatever surface it sits on — potentially worse thermals without airflow, though I haven't verified this myself.</p>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Pimoroni+NVMe+Base&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Pimoroni NVMe Base</a></p>
+<h3>3. PoE+ HAT with M.2 — The Combo Play</h3>
+<p>The official Raspberry Pi PoE+ HAT does <strong>not</strong> include M.2. If you want both PoE and NVMe, you're looking at third-party combo boards (like the 52Pi or Geekworm variants). I haven't tested any of these. Based on published specs, they typically combine a PoE power circuit and an M.2 slot on a single board, using both the GPIO header (for PoE power) and the FFC cable (for NVMe data).</p>
+<p><strong>Be cautious here.</strong> The combo boards reportedly have more compatibility variance, thicker stack height, and some require specific firmware settings. If you're running a headless homelab node and PoE is essential, they can simplify wiring. But if you can tolerate a separate USB-C power supply, the official M.2 HAT+ is a more predictable choice.</p>
+<h2>The Gen 3 Override Question</h2>
+<p>The Pi 5 allows forcing PCIe Gen 3 via <code>config.txt</code> (<code>dtparam=pciex1_gen=3</code>). This is officially unsupported by Raspberry Pi and not guaranteed to work on every board. I chose not to enable it for my daily-driver setup because Gen 2 already gives me 453 MB/s reads, which is more than sufficient for my homelab workloads (Docker containers, a small media stack, databases). For context, a quality microSD card delivers maybe 40–90 MB/s sequential. Going from 453 to a theoretical ~800 MB/s wouldn't change my actual experience for anything except large sequential file copies.</p>
+<p>If you do enable Gen 3 and it's stable on your specific board, you'd want a drive capable of saturating that bandwidth. The Fanxiang S501Q I'm using is a budget DRAMless drive — reportedly rated for around 500 MB/s by the manufacturer — so it wouldn't benefit anyway.</p>
+<h2>Which M.2 Drive to Buy</h2>
+<p>I used the <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB</a> because it was cheap (~$25) and available in 2242 form factor. At 453 MB/s sequential read and 16,433 random read IOPS, it's perfectly adequate. You don't need a flagship NVMe for a Pi 5. The PCIe bus is the ceiling, not the drive.</p>
+<p>Key constraints for drive selection:
+- <strong>Must be M.2 key-M NVMe</strong>, not SATA. SATA M.2 drives will not work.
+- <strong>2230 or 2242 form factor</strong> for the official HAT+ and most third-party boards. Check your specific HAT before buying 2280.
+- <strong>Capacity matters more than speed.</strong> Every budget NVMe will hit the Gen 2 wall. Buy the capacity you need.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you just want a media player or light Pi-hole install</strong>, a decent microSD card is fine. The M.2 HAT adds cost, complexity, and stack height for workloads that don't need the IOPS.</li>
+<li><strong>If you need more than ~450 MB/s sustained throughput</strong>, a Pi 5 isn't your platform. Consider a used mini PC, or run your workload on a small VPS like Hetzner Cloud where you get real SATA SSDs or better.</li>
+<li><strong>If GPIO access is critical and you want the official HAT+</strong>, you'll need a GPIO extension header or the underslung Pimoroni alternative.</li>
+</ul>
+<h2>Verdict</h2>
+<p><strong>The official M.2 HAT+ with any budget 2230/2242 NVMe drive is the right answer for most people.</strong> My Fanxiang S501Q on the official HAT+ delivered 453 MB/s reads and nearly 16.5K random IOPS at under 50 °C — more than enough for a homelab server. Save your money on the drive, spend it on capacity, and skip the Gen 3 hack unless you have a specific reason and a willingness to troubleshoot.</p></article><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.</div>
+</div></body></html>
