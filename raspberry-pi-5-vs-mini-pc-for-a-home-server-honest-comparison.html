@@ -1,24 +1,53 @@
 <!doctype html><html lang=en><head><meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>Raspberry Pi 5 vs Mini PC for a Home Server: honest comparison</title>
-<meta name=description content="Comparing Raspberry Pi 5 and mini PCs for home server use: power consumption, performance, storage options, cost over time, and which fits your setup."><link rel="canonical" href="https://homelabbench.com/raspberry-pi-5-vs-mini-pc-for-a-home-server-honest-comparison.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg">
+<meta name=description content="Comparing Raspberry Pi 5 and mini PCs for home server use: power consumption, performance, storage options, cost over time, and which fits your setup."><link rel="canonical" href="https://homelabbench.com/raspberry-pi-5-vs-mini-pc-for-a-home-server-honest-comparison.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{--fg:#1a1a1a;--mut:#666;--acc:#0b66c3;--bd:#e5e5e5;--bg:#fff}
-@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--bd:#30363d;--bg:#0d1117}}
-*{box-sizing:border-box}body{font:17px/1.65 -apple-system,system-ui,Segoe UI,sans-serif;
-color:var(--fg);background:var(--bg);margin:0}.wrap{max-width:720px;margin:0 auto;padding:22px}
-a{color:var(--acc)}h1{font-size:30px;line-height:1.2;margin:.2em 0}h2{font-size:23px;margin-top:1.6em}
-h3{font-size:19px}code{background:rgba(128,128,128,.15);padding:2px 5px;border-radius:4px;font-size:.9em}
-pre{background:rgba(128,128,128,.12);padding:14px;border-radius:8px;overflow-x:auto}
-pre code{background:none;padding:0}table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
-th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:rgba(128,128,128,.1)}
-.masthead{border-bottom:1px solid var(--bd);margin-bottom:20px}.masthead .t{font-weight:700;font-size:20px;text-decoration:none;color:var(--fg)}
-.mut{color:var(--mut)}.card{border:1px solid var(--bd);border-radius:10px;padding:16px;margin:12px 0}
-.card a{font-size:19px;font-weight:600;text-decoration:none}.aff{font-weight:600}
-.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:36px;padding-top:14px}
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
 </style></head><body><div class=wrap>
-<div class=masthead><p><a class=t href="/">The Homelab Bench</a><br>
-<span class=mut>Real Raspberry Pi &amp; self-hosting builds, actually tested.</span></p></div>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
 <article><p class=mut>2026-07-10</p><h1>Raspberry Pi 5 vs Mini PC for a Home Server: Honest Comparison</h1>
 <p>A Raspberry Pi 5 with 8GB of RAM can genuinely run a home server — I've been doing it, and I have the numbers to prove it works and where it falls short. An Intel N100 mini PC will outperform it in nearly every compute and I/O metric, but the gap matters less than you think for most self-hosting workloads.</p>
 <h2>My Actual Build and What I Measured</h2>
@@ -65,7 +94,8 @@ th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:
 <p>Both machines hit a ceiling eventually. When that happens, you might consider a used SFF desktop (Lenovo ThinkCentre, Dell OptiPlex) which gives you full PCIe slots and ECC RAM options for roughly the same power budget as an N100 box. Or skip the hardware entirely and rent a small VPS from Hetzner Cloud or <a class="aff" href="https://m.do.co/c/28ef2b9c9729" rel="nofollow sponsored" target="_blank">DigitalOcean</a> for the services that benefit from fat bandwidth and uptime guarantees, keeping only storage-heavy or LAN-dependent services at home.</p>
 <p>For off-site backups of either setup — and you should have off-site backups — Backblaze B2 B2 at $6/TB/month is hard to beat for a homelab.</p>
 <h2>Verdict</h2>
-<p><strong>The Pi 5 is a genuine home server</strong>, not a toy — 453 MB/s reads, 16K random IOPS, and rock-steady 49°C thermals prove it handles real workloads without drama. <strong>The N100 wins on raw capability</strong>, especially transcoding and storage bandwidth, for only $30-50 more. Pick the Pi if you want the simplest, lowest-power path to self-hosting a handful of services; pick the N100 if you need transcoding or room to grow.</p></article><p><a href="/">← all articles</a></p>
+<p><strong>The Pi 5 is a genuine home server</strong>, not a toy — 453 MB/s reads, 16K random IOPS, and rock-steady 49°C thermals prove it handles real workloads without drama. <strong>The N100 wins on raw capability</strong>, especially transcoding and storage bandwidth, for only $30-50 more. Pick the Pi if you want the simplest, lowest-power path to self-hosting a handful of services; pick the N100 if you need transcoding or room to grow.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 NVMe USB-C 10Gbps Enclosure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>mSATA / M.2 NGFF → SATA 3.0 SSD Adapter</span><span class=pr>£5.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/msata-m-2-ngff-to-sata-3-0-ssd-adapter-card-for-homelab-builds" target="_blank">View →</a></div><div class=prow><span class=nm>12V 3A Power Adapter (5.5×2.1mm)</span><span class=pr>£5.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/12v-3a-power-adapter-5-5-2-1mm-barrel-plug-1-5m-cable" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
 <div class=disc>Some links are affiliate links — if you buy through them I may earn a small
-commission at no extra cost to you. Benchmarks are run on my own hardware.</div>
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
 </div></body></html>
