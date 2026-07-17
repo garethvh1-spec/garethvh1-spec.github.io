@@ -1,0 +1,142 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Off-Site Backup for Your Homelab: the 3-2-1 rule, done cheaply</title>
+<meta name=description content="Learn how to implement the 3-2-1 backup rule in your homelab without breaking the bank. Practical, budget-friendly off-site backup strategies for home servers."><link rel="canonical" href="https://homelabbench.com/off-site-backup-for-your-homelab-the-3-2-1-rule-done-cheaply.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-07-17</p><h1>Off-Site Backup for Your Homelab: The 3-2-1 Rule, Done Cheaply</h1>
+<p>A proper 3-2-1 backup strategy means three copies of your data, on two different media types, with one copy off-site — and you can implement it for under $100 using hardware you probably already have. This guide walks through exactly how I do it with a Raspberry Pi 5, an NVMe drive, and a combination of local and remote targets.</p>
+<h2>What the 3-2-1 Rule Actually Means in Practice</h2>
+<p>Most homelabbers have copy one (the live data on their server) and maybe copy two (a second drive or RAID array on the same machine). That covers hardware failure. It does not cover fire, theft, ransomware, or a bad <code>rm -rf</code>. The third copy, stored physically elsewhere, is the part people skip because it seems expensive or complicated. It doesn't have to be either.</p>
+<p>Here's a realistic, cheap 3-2-1 layout:</p>
+<ol>
+<li><strong>Copy 1</strong> — Live data on your primary server/NAS.</li>
+<li><strong>Copy 2</strong> — Automated local backup to a separate drive (different media or at minimum a different device).</li>
+<li><strong>Copy 3</strong> — Off-site: either a physical drive you rotate to another location, or encrypted backups pushed to cloud storage.</li>
+</ol>
+<h2>My Setup: Raspberry Pi 5 as Backup Orchestrator</h2>
+<p>My backup orchestrator is a Raspberry Pi 5 Model B Rev 1.1 with 15 GiB RAM, running Debian GNU/Linux 13 (trixie) on kernel 6.18.34+rpt-rpi-2712. The boot drive is a <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB+NVMe+SSD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB NVMe SSD</a> mounted via the Pi's PCIe slot running at Gen 2 (the default). Real measured throughput: <strong>453 MB/s sequential read, 438 MB/s sequential write</strong>, with 16,433 random read IOPS at 4K. The SoC idles at 49.4°C and actually measured 48.8°C after sustained load — the thermal characteristics of the Pi 5 are genuinely excellent for always-on backup duty.</p>
+<p>These speeds matter because your backup window depends on write throughput. At 438 MB/s writes, I can dump roughly 100 GB of compressed backup data to this NVMe in under four minutes. That's fast enough to run nightly without worrying about jobs overlapping.</p>
+<h2>Copy 2: Local Backup with Restic or Borg</h2>
+<p>I use <code>restic</code> for all backup jobs. It handles deduplication, encryption, and incremental snapshots. Install it on Debian:</p>
+<pre><code class="language-bash">sudo apt install restic
+</code></pre>
+<p>Initialize a local repository on a USB-attached drive (your second medium):</p>
+<pre><code class="language-bash">restic -r /mnt/usb-backup init
+</code></pre>
+<p>Then back up your critical directories:</p>
+<pre><code class="language-bash">restic -r /mnt/usb-backup backup /srv/data /srv/docker
+</code></pre>
+<p>For the USB-attached drive, an M.2 SATA SSD in an external enclosure <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-ngff-to-usb-3-0-aluminium-ssd-enclosure-portable-homelab-storage" target="_blank">M.2 NGFF to USB 3.0 Aluminium SSD Enclosure – Portable Homelab Storage</a> is cheap and silent. If your backups are larger or you need NVMe speeds on the external side too, a USB-C 10Gbps NVMe enclosure <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> will let you get close to the USB 3.2 ceiling — reportedly around 900-1000 MB/s on devices that support it, though I haven't benchmarked that enclosure specifically.</p>
+<h3>Retention Policy</h3>
+<p>Don't just keep every snapshot forever. Set a sane policy:</p>
+<pre><code class="language-bash">restic -r /mnt/usb-backup forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune
+</code></pre>
+<p>This keeps a week of dailies, a month of weeklies, and six months of monthlies. Adjust to your paranoia level.</p>
+<h2>Copy 3: Getting Data Off-Site</h2>
+<p>This is the part that actually protects you. Two approaches, ranked by cost:</p>
+<h3>Option A: Physical Drive Rotation (~$0/month)</h3>
+<p>Buy two identical portable SSDs. Keep one connected to your Pi for automated nightly backups. Once a week, swap it with the one stored at your office, a friend's house, or a bank safe deposit box. Low-tech, zero recurring cost, and immune to cloud provider policy changes.</p>
+<p>A 1 TB M.2 SATA SSD in an aluminium enclosure runs about $60-80 total. Two of them, and you have a perpetual off-site rotation for under $160.</p>
+<h3>Option B: Encrypted Cloud Backup (~$0-6/month)</h3>
+<p><code>restic</code> natively supports Backblaze B2 as a backend. B2 charges $6/TB/month for storage and $0.01/GB for egress. For a typical homelab with 50-100 GB of deduplicated backup data, you're looking at <strong>$0.30-$0.60/month</strong> — essentially free. Sign up at Backblaze B2.</p>
+<p>Configure it:</p>
+<pre><code class="language-bash">export B2_ACCOUNT_ID=&quot;your-account-id&quot;
+export B2_ACCOUNT_KEY=&quot;your-account-key&quot;
+restic -r b2:your-bucket-name:homelab init
+restic -r b2:your-bucket-name:homelab backup /srv/data /srv/docker
+</code></pre>
+<p>Restic encrypts everything client-side before upload. Backblaze never sees your plaintext data. This is important — don't skip the encryption or rely on the provider's encryption alone.</p>
+<h3>Option C: Remote Server</h3>
+<p>If you already rent a VPS (say from Hetzner Cloud with their cheap storage boxes, or <a class="aff" href="https://m.do.co/c/28ef2b9c9729" rel="nofollow sponsored" target="_blank">DigitalOcean</a> with attached block storage), you can push restic backups over SFTP:</p>
+<pre><code class="language-bash">restic -r sftp:user@remote-server:/backups/homelab init
+</code></pre>
+<p>This doubles as off-site and gives you a restore point that's network-accessible from anywhere. Hetzner's Storage Boxes are reportedly as cheap as €3.81/month for 1 TB — purpose-built for exactly this use case.</p>
+<h2>Automating Everything with Cron and Systemd</h2>
+<p>A backup you have to remember to run is a backup that won't exist when you need it. Create a systemd timer:</p>
+<pre><code class="language-ini"># /etc/systemd/system/restic-backup.service
+[Unit]
+Description=Restic backup
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/restic-env
+ExecStart=/usr/bin/restic -r b2:your-bucket:homelab backup /srv/data /srv/docker
+ExecStartPost=/usr/bin/restic -r b2:your-bucket:homelab forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune
+</code></pre>
+<pre><code class="language-ini"># /etc/systemd/system/restic-backup.timer
+[Unit]
+Description=Nightly restic backup
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+</code></pre>
+<p>Enable it:</p>
+<pre><code class="language-bash">sudo systemctl enable --now restic-backup.timer
+</code></pre>
+<h2>Test Your Restores</h2>
+<p>This deserves its own section because it's the step everyone skips. A backup you've never restored from is a hypothesis, not a backup. Once a month:</p>
+<pre><code class="language-bash">restic -r b2:your-bucket:homelab restore latest --target /tmp/restore-test
+diff -r /srv/data /tmp/restore-test/srv/data
+</code></pre>
+<p>If the diff shows nothing, your backups work. If it doesn't, you found out now instead of during an emergency.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you have more than ~2 TB of data changing frequently</strong>, a Pi-based solution will bottleneck on USB and network throughput. You need a proper NAS with multiple drive bays at that point — look at used Dell or Lenovo micro PCs with SATA ports.</li>
+<li><strong>If your data has strict compliance requirements</strong> (HIPAA, financial records), a DIY encrypted cloud backup may not satisfy auditors. You'll need a provider with compliance certifications.</li>
+<li><strong>If you won't test restores</strong>, none of this matters. Don't build it if you won't maintain it.</li>
+</ul>
+<h2>Verdict</h2>
+<p>A Raspberry Pi 5 with a $40 NVMe drive gives you a silent, 5-watt backup server that writes at 438 MB/s — fast enough to back up most homelabs in minutes. Pair it with a $0.50/month Backblaze B2 bucket and a local USB SSD, and you have a legitimate 3-2-1 setup for under $100 plus pennies in monthly cloud fees. The expensive part isn't hardware — it's the discipline to automate, encrypt, and actually test your restores.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NGFF to USB 3.0 Aluminium SSD Enclosure – Portable Homelab Storage</span><span class=pr>£13.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ngff-to-usb-3-0-aluminium-ssd-enclosure-portable-homelab-storage" target="_blank">View →</a></div><div class=prow><span class=nm>mSATA / M.2 NGFF to SATA 3.0 SSD Adapter Card for Homelab Builds</span><span class=pr>£5.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/msata-m-2-ngff-to-sata-3-0-ssd-adapter-card-for-homelab-builds" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
