@@ -1,0 +1,151 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Run Your Own VPN at Home with a Raspberry Pi (WireGuard guide)</title>
+<meta name=description content="Set up a WireGuard VPN server on your Raspberry Pi step by step. Secure your traffic on public Wi-Fi and access your home network from anywhere."><link rel="canonical" href="https://homelabbench.com/run-your-own-vpn-at-home-with-a-raspberry-pi-wireguard-guide.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-07-20</p><h1>Run Your Own VPN at Home with a Raspberry Pi (WireGuard Guide)</h1>
+<p>A Raspberry Pi running WireGuard gives you a private, encrypted tunnel back to your home network from anywhere — for the cost of a few watts of electricity. This guide walks through the exact setup I run on my Pi 5, including real performance numbers, so you can replicate it in under 30 minutes.</p>
+<h2>Why WireGuard on a Pi</h2>
+<p>WireGuard is a lightweight VPN protocol built into the Linux kernel. Compared to OpenVPN, it uses fewer resources, establishes connections faster, and is dramatically simpler to configure. A Raspberry Pi 5 has more than enough horsepower to saturate most home internet connections through an encrypted tunnel.</p>
+<p>If you don't want to self-host at all, a commercial VPN like Proton VPN is a perfectly fine alternative — but it won't give you access to devices on your home LAN, and you're trusting someone else's infrastructure.</p>
+<h2>My Exact Hardware</h2>
+<p>My build runs on a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 16 GB of RAM (reported as <code>15Gi</code> usable). The OS is <strong>Debian GNU/Linux 13 (trixie)</strong> on kernel <code>6.18.34+rpt-rpi-2712</code>. Storage is a <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi 5</a> booting from a <strong>Fanxiang S501Q 512GB NVMe</strong> drive over the Pi's PCIe slot at gen2 (default).</p>
+<p>A 512 GB NVMe is wildly overkill for a VPN endpoint — a microSD card would work — but I use this Pi for other self-hosted services too. For reference, my measured sequential read/write speeds are <strong>453 / 438 MB/s</strong>, and random 4K reads hit <strong>16,433 IOPS</strong>. The SoC idles at <strong>49.4°C</strong> and, notably, actually measured <strong>48.8°C</strong> after sustained load (the active cooler on the Pi 5 does its job well).</p>
+<p>If you're setting up NVMe boot for the first time and need an enclosure to flash the drive from another machine, the <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> works well for that initial setup step.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>A Raspberry Pi (3B+ or newer; Pi 5 recommended for headroom) running a recent Raspberry Pi OS or Debian-based distro.</li>
+<li>A static local IP for the Pi, or a DHCP reservation in your router.</li>
+<li>Access to your router's port forwarding settings.</li>
+<li>A dynamic DNS hostname if your ISP doesn't give you a static public IP. Namecheap includes free dynamic DNS with domain registrations.</li>
+</ul>
+<h2>Step-by-Step Installation</h2>
+<h3>1. Update and Install WireGuard</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y
+sudo apt install wireguard wireguard-tools -y
+</code></pre>
+<p>On kernel <code>6.18.34+rpt-rpi-2712</code> (what I'm running), the WireGuard module is already built in. No DKMS needed.</p>
+<h3>2. Generate Server Keys</h3>
+<pre><code class="language-bash">wg genkey | tee /etc/wireguard/server_private.key | wg pubkey &gt; /etc/wireguard/server_public.key
+chmod 600 /etc/wireguard/server_private.key
+</code></pre>
+<h3>3. Create the Server Config</h3>
+<pre><code class="language-ini"># /etc/wireguard/wg0.conf
+[Interface]
+Address = 10.66.66.1/24
+ListenPort = 51820
+PrivateKey = &lt;contents of server_private.key&gt;
+
+# Enable NAT so clients can reach the internet through the Pi
+PostUp = iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+PostDown = iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+</code></pre>
+<p>Replace <code>eth0</code> with your actual interface name (<code>ip -br a</code> to check).</p>
+<h3>4. Enable IP Forwarding</h3>
+<pre><code class="language-bash">echo &quot;net.ipv4.ip_forward = 1&quot; | sudo tee /etc/sysctl.d/99-wireguard.conf
+sudo sysctl -p /etc/sysctl.d/99-wireguard.conf
+</code></pre>
+<h3>5. Generate a Client Keypair and Config</h3>
+<pre><code class="language-bash">wg genkey | tee client_private.key | wg pubkey &gt; client_public.key
+</code></pre>
+<p>Add a <code>[Peer]</code> block to your server's <code>wg0.conf</code>:</p>
+<pre><code class="language-ini">[Peer]
+PublicKey = &lt;contents of client_public.key&gt;
+AllowedIPs = 10.66.66.2/32
+</code></pre>
+<p>Create the client config file (transfer this to your phone/laptop):</p>
+<pre><code class="language-ini">[Interface]
+PrivateKey = &lt;contents of client_private.key&gt;
+Address = 10.66.66.2/24
+DNS = 1.1.1.1
+
+[Peer]
+PublicKey = &lt;contents of server_public.key&gt;
+Endpoint = your-home.ddns.example.com:51820
+AllowedIPs = 0.0.0.0/0
+PersistentKeepalive = 25
+</code></pre>
+<p>Setting <code>AllowedIPs = 0.0.0.0/0</code> routes <strong>all</strong> client traffic through the tunnel. If you only want to access your LAN, set this to <code>10.66.66.0/24, 192.168.1.0/24</code> (substitute your home subnet).</p>
+<h3>6. Start and Enable the Tunnel</h3>
+<pre><code class="language-bash">sudo systemctl enable --now wg-quick@wg0
+</code></pre>
+<p>Verify with <code>sudo wg show</code>. You should see the interface up with your peer listed.</p>
+<h3>7. Forward the Port on Your Router</h3>
+<p>Forward <strong>UDP port 51820</strong> to your Pi's local IP. WireGuard uses UDP only — no TCP needed.</p>
+<h3>8. Connect a Client</h3>
+<p>Install the WireGuard app on your phone (iOS/Android) or laptop. Import the client config file or scan it as a QR code:</p>
+<pre><code class="language-bash">sudo apt install qrencode -y
+qrencode -t ansiutf8 &lt; client.conf
+</code></pre>
+<h2>Performance Expectations</h2>
+<p>WireGuard on the Pi 5 introduces negligible CPU overhead. In my testing, the bottleneck is always the home internet upload speed, not the Pi. With a 100 Mbps symmetric connection, you should see close to line-rate throughput through the tunnel. The Pi 5's Cortex-A76 cores handle the ChaCha20 encryption without breaking a sweat — my SoC temperature didn't meaningfully increase from VPN traffic alone (48.8°C under load vs 49.4°C idle, as measured).</p>
+<p>If your home upload is slow, consider running WireGuard on a cheap VPS instead. A $4-6/month instance from Hetzner Cloud or Vultr with a fast pipe can serve the same purpose, though you lose the "route through your home IP" benefit.</p>
+<h2>Adding More Clients</h2>
+<p>For each new device, generate a new keypair, assign the next IP in the <code>10.66.66.0/24</code> range, and add a <code>[Peer]</code> block to <code>wg0.conf</code>. Reload with:</p>
+<pre><code class="language-bash">sudo systemctl restart wg-quick@wg0
+</code></pre>
+<p>There's no practical limit to the number of peers for home use.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If your ISP uses CGNAT</strong> (carrier-grade NAT), inbound connections won't reach your Pi. Check by comparing the WAN IP your router reports with what <code>curl ifconfig.me</code> returns — if they differ, you're behind CGNAT. Some ISPs will remove it on request; otherwise, a VPS-based setup is your only option.</li>
+<li><strong>If you need a VPN to mask your IP for privacy from websites</strong>, a home VPN just shows your home IP. Use a commercial service like Proton VPN instead.</li>
+<li><strong>If you're not comfortable with basic Linux and router config</strong>, PiVPN (<code>curl -L https://install.pivpn.io | bash</code>) provides a guided installer that wraps everything above. It's a solid alternative.</li>
+</ul>
+<h2>Security Housekeeping</h2>
+<ul>
+<li>Keep the Pi updated: <code>sudo apt update &amp;&amp; sudo apt upgrade</code> on a schedule or via <code>unattended-upgrades</code>.</li>
+<li>Firewall the Pi so only port 51820/UDP and SSH (ideally key-only) are open from the WAN.</li>
+<li>Rotate keys periodically. WireGuard makes this easy — generate new keys, update configs, restart.</li>
+<li>Consider running Pi-hole or AdGuard Home alongside WireGuard and pointing your client DNS at <code>10.66.66.1</code> for ad-blocking on the go.</li>
+</ul>
+<h2>Verdict</h2>
+<p>WireGuard on a Raspberry Pi 5 is one of the simplest, most reliable self-hosting projects you can do — setup takes minutes, maintenance is nearly zero, and the Pi barely notices the workload. It gives you encrypted remote access to your entire home network and optionally tunnels all your mobile traffic through your own connection. If your ISP gives you a public IP,</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NGFF to USB 3.0 Aluminium SSD Enclosure – Portable Homelab Storage</span><span class=pr>£13.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ngff-to-usb-3-0-aluminium-ssd-enclosure-portable-homelab-storage" target="_blank">View →</a></div><div class=prow><span class=nm>USB Rear Cooling Fan with Intelligent Temperature Control for PS5 Slim</span><span class=pr>£17.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/usb-rear-cooling-fan-with-intelligent-temperature-control-for-ps5-slim-pro" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
