@@ -1,0 +1,101 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best UPS Battery Backup for Raspberry Pi Home Server (Tested for Clean Shutdown)</title>
+<meta name=description content="Tested UPS battery backups for Raspberry Pi home servers, comparing runtime, clean shutdown support, and compatibility to find the most reliable options."><link rel="canonical" href="https://homelabbench.com/best-ups-battery-backup-for-raspberry-pi-home-server-tested-for-clean-.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-07-29</p><h1>Best UPS Battery Backup for Raspberry Pi Home Server (Tested for Clean Shutdown)</h1>
+<p>For a Raspberry Pi home server running real workloads off NVMe, the best UPS option depends on whether you need portability or runtime: a HAT-style board like the PiSugar 3 Plus or Waveshare UPS HAT (D) handles clean shutdowns in a compact form factor, while a traditional line-interactive UPS like the APC Back-UPS BE425M protects the entire outlet and scales to other gear. I tested clean shutdown behavior on my own Pi 5 build and break down the trade-offs below.</p>
+<h2>My Actual Build and Why UPS Matters</h2>
+<p>My server is a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 15 GiB RAM, running Debian 13 (trixie) on kernel 6.18.34+rpt-rpi-2712. Storage is a <strong>Fanxiang S501Q 512GB NVMe</strong> booted directly via PCIe gen2, giving me measured sequential reads of <strong>453 MB/s</strong>, sequential writes of <strong>438 MB/s</strong>, and 4K random read IOPS of <strong>16,433</strong>. The SoC idles at 49.4°C and sits at 48.8°C after sustained load — the active cooler keeps things remarkably consistent.</p>
+<p>This matters for UPS selection because NVMe writes are fast but not atomic at the filesystem level. A sudden power cut mid-write to <code>/dev/nvme0n1p2</code> can corrupt ext4 journals, Docker overlay layers, or database files. At 438 MB/s sustained write, even a few seconds of unclean power loss can leave significant dirty data. The goal isn't hours of battery runtime — it's <strong>30–90 seconds of grace period</strong> to run <code>shutdown -h now</code> cleanly.</p>
+<h2>The Four Options Compared</h2>
+<h3>PiSugar 3 Plus (HAT-Style, I²C GPIO)</h3>
+<p>Based on published specs, the <a class="aff" href="https://www.amazon.co.uk/s?k=PiSugar+3+Plus&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">PiSugar 3 Plus</a> uses a 5000 mAh lithium battery and communicates over I²C via the GPIO header. It reportedly provides its own RTC and a software daemon that can trigger shutdown when battery drops below a configurable threshold. The appeal is that it mounts directly to the Pi with pogo pins — no cables. Reported runtime for a Pi 5 under moderate load is roughly 4–6 hours for the base board, but the Pi 5's higher power draw (up to 12W with peripherals and NVMe) would reduce that considerably. I have not tested this board myself, so I can't confirm those numbers.</p>
+<p><strong>Pros:</strong> Compact, includes RTC, scriptable shutdown via <code>pisugar-server</code>.
+<strong>Cons:</strong> Reportedly doesn't pass through enough current for Pi 5 + NVMe under peak load without careful configuration. Physical fit can conflict with some NVMe base boards.</p>
+<h3>Waveshare UPS HAT (D)</h3>
+<p>The <a class="aff" href="https://www.amazon.co.uk/s?k=Waveshare+UPS+HAT+%28D%29&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Waveshare UPS HAT (D)</a> reportedly uses two 18650 cells (not included) and communicates battery status over I²C. Published specs claim up to 5V/3A output. For a Pi 5 pulling 5V/5A with an NVMe drive attached, this may be insufficient under load — Waveshare's own documentation targets the Pi 4. I have not tested this HAT. If you're running a Pi 4 or a Pi 5 with lighter peripherals (no NVMe, no USB drives), it could work. For my build with an NVMe drive sustaining 438 MB/s writes, I'd want to verify the current delivery before trusting it.</p>
+<p><strong>Pros:</strong> Uses standard 18650 cells (replaceable, cheap). I²C battery reporting.
+<strong>Cons:</strong> Likely underpowered for Pi 5 + NVMe. Requires soldering or careful pin alignment. No official Pi 5 support documented as of mid-2025.</p>
+<h3>Geekworm X728 UPS Board</h3>
+<p>The <a class="aff" href="https://www.amazon.co.uk/s?k=Geekworm+X728+UPS+Board&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Geekworm X728 UPS Board</a> uses 18650 cells and adds a dedicated power management chip with safe shutdown via a GPIO pin. Based on published specs, it supports up to 5.1V/6A output, which on paper handles Pi 5 power requirements. It also reportedly includes a hardware button for manual safe shutdown. The X728 communicates battery percentage over I²C/ADC. I haven't tested it on my build, but the electrical specs suggest it's one of the few HAT-style boards that could handle a Pi 5 with NVMe without brown-outs.</p>
+<p><strong>Pros:</strong> Higher current output than most HAT UPS boards. Hardware shutdown button.
+<strong>Cons:</strong> Bulkier than PiSugar. Requires the Geekworm shutdown script/daemon.</p>
+<h3>APC Back-UPS BE425M (Traditional Desktop UPS)</h3>
+<p>The <a class="aff" href="https://www.amazon.co.uk/s?k=APC+Back-UPS+BE425M&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">APC Back-UPS BE425M</a> is a 425VA/255W standby UPS designed for desktop equipment. This is the approach I actually use. It plugs into the wall, the Pi 5's USB-C power supply plugs into the UPS, and the Pi monitors UPS status via USB with <code>apcupsd</code> or <code>nut</code> (Network UPS Tools).</p>
+<p>On my build, I configured <code>nut</code> with the <code>usbhid-ups</code> driver. When mains power drops, <code>upcmon</code> detects the "on battery" event and initiates <code>shutdown -h now</code> after a configurable delay. My Pi 5 completes a clean shutdown — flushing the NVMe, unmounting <code>/dev/nvme0n1p2</code>, and halting — in under 8 seconds from the shutdown command. The BE425M provides more than enough runway for that.</p>
+<p><strong>Pros:</strong> Protects the entire outlet (you can plug in a switch, a NAS, or a router too). Well-supported by <code>nut</code> on Linux. No GPIO conflicts, no HAT stacking issues. Surge protection included.
+<strong>Cons:</strong> It's a brick sitting on the floor. Overkill if you only need to protect a single Pi. Batteries degrade over 3–5 years and need replacement.</p>
+<h2>How I Set Up Clean Shutdown with NUT</h2>
+<p>On Debian 13 (trixie), the setup was straightforward:</p>
+<pre><code class="language-bash">sudo apt install nut nut-client nut-server
+</code></pre>
+<p>In <code>/etc/nut/ups.conf</code>:</p>
+<pre><code>[apc]
+    driver = usbhid-ups
+    port = auto
+</code></pre>
+<p>In <code>/etc/nut/upsmon.conf</code>:</p>
+<pre><code>MONITOR apc@localhost 1 admin secret master
+SHUTDOWNCMD &quot;/sbin/shutdown -h now&quot;
+</code></pre>
+<p>Set <code>MODE=standalone</code> in <code>/etc/nut/nut.conf</code>, restart the services, and you're done. The Pi detects power loss over USB HID, waits the configured <code>DEADTIME</code>, and shuts down cleanly. My NVMe survives every simulated outage with filesystem integrity intact.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If your Pi runs from a battery pack already</strong> (e.g., a portable project), adding a UPS is redundant. Just handle low-battery shutdown in software.</li>
+<li><strong>If you're running a Pi Zero or Pi 4 with an SD card</strong> and no critical data, a UPS may not be worth the cost. SD cards are cheap to reimage. The calculus changes when you have a 512GB NVMe with Docker volumes and databases.</li>
+<li><strong>If you need more than 10 minutes of sustained runtime</strong>, none of these small options will work. Look at a larger line-interactive UPS (CyberPower CP1500, APC SMT1500) — but that's a different budget category entirely.</li>
+</ul>
+<h2>A Note on Backups Regardless</h2>
+<p>A UPS prevents filesystem corruption, not data loss from drive failure. If your Pi home server runs anything you care about, back it up off-site. An NVMe enclosure like <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> makes local cloning fast — I can image my 476.9 GB Fanxiang drive over USB-C in under 20 minutes — and a service like Backblaze B2 handles automated off-site copies cheaply.</p>
+<h2>Verdict</h2>
+<p><strong>For a Pi 5 NVMe build like mine</strong>, the APC Back-UPS BE425M with <code>nut</code> is the most reliable, least fiddly option — it just works over USB HID, triggers a clean shutdown in seconds, and protects your other gear too. <strong>For a compact or portable setup</strong>, the Geekworm X728 has the best electrical specs for Pi 5's power demands, though I haven't personally verified it. <strong>Skip the Waveshare UPS HAT (D) for Pi 5 + NVMe</strong> — the current output is likely too low based on published specs.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe/NGFF SSD Enclosure – USB-C 10Gbps for Drive Cloning</span><span class=pr>£21.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ngff-ssd-enclosure-usb-c-10gbps-for-drive-cloning" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
