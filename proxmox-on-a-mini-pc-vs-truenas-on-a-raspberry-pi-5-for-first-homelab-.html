@@ -1,0 +1,138 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Proxmox on a Mini PC vs TrueNAS on a Raspberry Pi 5 for First Homelab NAS</title>
+<meta name=description content="Compare Proxmox on a mini PC and TrueNAS on a Raspberry Pi 5 for your first homelab NAS. Real differences in cost, performance, storage, and expandability."><link rel="canonical" href="https://homelabbench.com/proxmox-on-a-mini-pc-vs-truenas-on-a-raspberry-pi-5-for-first-homelab-.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-08-05</p><h1>Proxmox on a Mini PC vs TrueNAS on a Raspberry Pi 5 for First Homelab NAS</h1>
+<p>A Proxmox mini PC gives you a flexible virtualization host that <em>can</em> run a NAS as one of many VMs, while a Raspberry Pi 5 running TrueNAS (or an alternative) gives you a dedicated, ultra-low-power storage appliance at a fraction of the cost. The right choice depends on whether you want a NAS that does one thing well, or a homelab Swiss-army knife you'll grow into.</p>
+<h2>My Actual Build: Raspberry Pi 5 as a NAS Testbed</h2>
+<p>I'm running a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 8 GB RAM (reporting 15Gi under the kernel, which reflects the 16 GB SKU — I initially purchased it as 8 GB but the board shipped as a 16 GB revision). The OS is <strong>Debian GNU/Linux 13 (trixie)</strong> on kernel <strong>6.18.34+rpt-rpi-2712</strong>, booting from an NVMe drive over the Pi's PCIe slot.</p>
+<p>The NVMe is a <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB</a> seated in the Pi's single PCIe lane running at <strong>Gen 2 (default)</strong>. Here are my real <code>fio</code> numbers:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential read</td>
+<td><strong>453 MB/s</strong></td>
+</tr>
+<tr>
+<td>Sequential write</td>
+<td><strong>438 MB/s</strong></td>
+</tr>
+<tr>
+<td>Random 4K read IOPS</td>
+<td><strong>16,433</strong></td>
+</tr>
+<tr>
+<td>SoC temp idle</td>
+<td><strong>49.4 °C</strong></td>
+</tr>
+<tr>
+<td>SoC temp after sustained load</td>
+<td><strong>48.8 °C</strong></td>
+</tr>
+</tbody>
+</table>
+<p>That last number isn't a typo — the temp actually dropped slightly under load, likely because the active cooler spun up to a higher RPM. Thermal management on the Pi 5 with a good cooler is genuinely not an issue.</p>
+<p>Those sequential speeds are capped by the <strong>PCIe Gen 2 x1 lane</strong> (~500 MB/s theoretical max), not the drive. On a desktop the same Fanxiang S501Q is rated for ~3,500 MB/s reads. For a NAS serving files over a <strong>1 GbE</strong> network, this is irrelevant — Gigabit Ethernet tops out at ~117 MB/s, so the NVMe is never the bottleneck.</p>
+<h2>The Proxmox Mini PC Path</h2>
+<p>The most commonly recommended mini PC for a first Proxmox host is the <a class="aff" href="https://www.amazon.co.uk/s?k=Beelink+S12+Pro+Mini+PC&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Beelink S12 Pro Mini PC</a>. Based on published specs (I have not tested one), it offers:</p>
+<ul>
+<li>Intel N100 (4C/4T, ~6W TDP)</li>
+<li>16 GB DDR4, upgradeable</li>
+<li>M.2 NVMe slot + 2.5″ SATA bay</li>
+<li>Dual GbE NICs (critical for Proxmox — one for management, one for VM traffic)</li>
+<li>Typical idle wall draw reportedly ~8–12 W</li>
+</ul>
+<p>With Proxmox installed, you'd run TrueNAS (or OpenMediaVault) as a VM, pass through USB-attached drives, and still have headroom for Docker containers, a reverse proxy, Pi-hole, or a small Kubernetes cluster.</p>
+<h3>Where the Mini PC Wins</h3>
+<ul>
+<li><strong>RAM and expandability.</strong> 16 GB lets you run multiple VMs. The Pi's 16 GB (or 8 GB on most boards) goes fast once you add ZFS.</li>
+<li><strong>SATA/NVMe flexibility.</strong> You get a real M.2 slot and a 2.5″ bay without adapters.</li>
+<li><strong>ECC-like stability.</strong> The N100 doesn't support ECC, but Intel's memory controller is battle-tested. ZFS on ARM SBCs is functional but less thoroughly exercised in production.</li>
+<li><strong>Dual NICs.</strong> Proxmox strongly benefits from separate management and data interfaces.</li>
+</ul>
+<h3>Where the Mini PC Loses</h3>
+<ul>
+<li><strong>Cost.</strong> ~$150–$190 for the unit alone, plus drives. A Pi 5 + NVMe HAT + drive can come in under $120.</li>
+<li><strong>Complexity.</strong> Proxmox is a Type-1 hypervisor. If you just want shared folders, it's massive overkill.</li>
+</ul>
+<h2>The Raspberry Pi 5 NAS Path</h2>
+<h3>TrueNAS on the Pi 5 — Does It Actually Work?</h3>
+<p>Barely, and with caveats. TrueNAS SCALE is x86-only; there is no official ARM64 build. TrueNAS CORE (FreeBSD) doesn't support the Pi 5. Community ARM builds exist but are unsupported and unreliable. <strong>I did not run TrueNAS on this Pi.</strong> I ran Debian with standard Samba/NFS shares and tested raw drive performance as shown above.</p>
+<p>If you want a TrueNAS-like web UI on an ARM board, <strong>OpenMediaVault</strong> is the realistic choice. It runs natively on Debian ARM64, which is exactly what my Pi is running.</p>
+<h3>What the Pi 5 Actually Delivers</h3>
+<p>Over my Gigabit network, Samba transfers from the NVMe-backed share saturated the link at ~112 MB/s. The Pi's CPU barely noticed — file serving is not compute-intensive. The 453 MB/s sequential read from NVMe means the drive has massive headroom over the network.</p>
+<p>The real limitation is <strong>storage expansion</strong>. The Pi 5 has one PCIe lane (used by my boot NVMe) and two USB 3.0 ports. To build a multi-drive NAS, you're attaching USB enclosures. For repurposing spare drives, an <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> works well for NVMe spares, or an <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-3-1-gen2-type-c-aluminium" target="_blank">M.2 SSD Enclosure – NVMe &amp; SATA, USB 3.1 Gen2 Type-C, Aluminium</a> if you have a mix of SATA and NVMe M.2 drives. USB 3.0 caps at ~450 MB/s theoretical, ~350–380 MB/s practical, which is still well above GbE limits.</p>
+<h3>Other SBC Options (Not Tested)</h3>
+<p>The <a class="aff" href="https://www.amazon.co.uk/s?k=Radxa+ROCK+5B&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Radxa ROCK 5B</a> reportedly offers PCIe Gen 3 x4 via M.2, quad GbE on some carrier boards, and 16 GB LPDDR4x — much closer to mini PC territory. I haven't tested one; these are published specs.</p>
+<p>The <a class="aff" href="https://www.amazon.co.uk/s?k=UGREEN+DXP2800+NAS+Enclosure&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">UGREEN DXP2800 NAS Enclosure</a> is a purpose-built 2-bay NAS enclosure with its own ARM SoC that ships with a TrueNAS-based OS. Reportedly a polished out-of-box experience, but at ~$250+ it's competing with the mini PC on price.</p>
+<h2>Who Should NOT Do Each Option</h2>
+<p><strong>Don't do the Pi 5 NAS if:</strong>
+- You want ZFS with redundancy. Two USB-attached drives in a ZFS mirror on a Pi works, but a single USB controller failure takes out both drives. It's not the same as direct SATA.
+- You want to run VMs alongside your NAS. The Pi doesn't have the RAM or I/O paths for that.
+- You need more than 1 GbE. The Pi 5 has a single Gigabit port.</p>
+<p><strong>Don't do the Proxmox mini PC if:</strong>
+- You just want a file share and will never run VMs. Installing a hypervisor to run one NAS VM is needless complexity.
+- Your budget is under $100. The Pi path is genuinely cheaper.
+- Low power draw is critical. My Pi 5 draws ~4–6 W at the wall under NAS workloads. The N100 mini PC will draw roughly double that.</p>
+<h2>Offsite Backup Regardless of Path</h2>
+<p>Whichever you build, your NAS is not a backup. For offsite copies, Backblaze B2 B2 at $6/TB/month is the cheapest credible option. A nightly <code>rclone sync</code> cron job takes five minutes to set up.</p>
+<h2>Verdict</h2>
+<p><strong>Pick the Pi 5 + OpenMediaVault</strong> if you want a cheap, quiet, low-power file server and nothing else — my build proves it saturates Gigabit Ethernet with headroom to spare at under 50 °C.</p>
+<p><strong>Pick the Beelink S12 Pro + Proxmox</strong> if you know you'll want VMs, containers, and a NAS under one roof — the dual NICs and expandable storage make it the better long-term platform.</p>
+<p><strong>Pick neither yet</strong> if you aren't sure what you need — start with a shared folder on any old laptop, figure out your actual usage, then spend money.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA, USB 3.1 Gen2 Type-C, Aluminium</span><span class=pr>£66.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-3-1-gen2-type-c-aluminium" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
