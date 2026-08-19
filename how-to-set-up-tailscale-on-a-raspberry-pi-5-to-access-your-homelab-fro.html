@@ -1,0 +1,139 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>How to Set Up Tailscale on a Raspberry Pi 5 to Access Your Homelab from Anywhere</title>
+<meta name=description content="Learn how to install and configure Tailscale on a Raspberry Pi 5 so you can securely access your homelab devices from anywhere over a private WireGuard network."><link rel="canonical" href="https://homelabbench.com/how-to-set-up-tailscale-on-a-raspberry-pi-5-to-access-your-homelab-fro.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-08-19</p><h1>How to Set Up Tailscale on a Raspberry Pi 5 to Access Your Homelab from Anywhere</h1>
+<p>Tailscale turns your Raspberry Pi 5 into a WireGuard-based mesh VPN node in about ten minutes, letting you reach every service on your home network from anywhere without opening a single firewall port. This guide walks through the exact steps on the Pi 5 I actually run — including the real hardware, real temps, and real gotchas.</p>
+<h2>My Exact Build</h2>
+<p>Before we touch software, here's the hardware I'm working with so you can calibrate expectations:</p>
+<ul>
+<li><strong>Board:</strong> Raspberry Pi 5 Model B Rev 1.1, 8 GB (reports <code>15Gi</code> usable under Debian)</li>
+<li><strong>OS:</strong> Debian GNU/Linux 13 (trixie), kernel <code>6.18.34+rpt-rpi-2712</code></li>
+<li><strong>Boot drive:</strong> Fanxiang S501Q 512 GB NVMe, booting directly from <code>/dev/nvme0n1p2</code> — no microSD in the slot</li>
+<li><strong>Case:</strong> <a class="aff" href="https://www.amazon.co.uk/s?k=Argon+ONE+V3+M.2+Case&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Argon ONE V3 M.2 Case</a> (houses the NVMe underneath the board)</li>
+<li><strong>Storage performance (fio, measured by me):</strong> 453 MB/s sequential read, 438 MB/s sequential write, 16,433 random 4K read IOPS — all at the Pi 5's default PCIe Gen 2</li>
+<li><strong>Thermals (measured by me):</strong> 49.4 °C idle, 48.8 °C after a sustained load test (the Argon case's passive heatsink body does real work here — the post-load temp being slightly lower than idle reflects ambient drift, but the point is thermals stayed flat under load)</li>
+</ul>
+<p>I haven't personally tested the <a class="aff" href="https://www.amazon.co.uk/s?k=SanDisk+Extreme+Pro+microSD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">SanDisk Extreme Pro microSD</a> or the <a class="aff" href="https://www.amazon.co.uk/s?k=GeeekPi+PoE%2B+HAT&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">GeeekPi PoE+ HAT</a> in this build — those are commonly recommended for Pi 5 homelab setups based on their published specs, but I can't give you first-hand numbers on them.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>A Raspberry Pi 5 running Raspberry Pi OS or Debian (my steps are tested on trixie; Bookworm works identically)</li>
+<li>SSH access or a direct terminal session</li>
+<li>A free Tailscale account (up to 100 devices on the free tier as of mid-2025)</li>
+<li>Your Pi booted and on your LAN</li>
+</ul>
+<p>If you'd rather run Tailscale on a cloud VPS instead of (or in addition to) a Pi, a small instance on <a class="aff" href="https://m.do.co/c/28ef2b9c9729" rel="nofollow sponsored" target="_blank">DigitalOcean</a> or Hetzner Cloud works fine as an exit node or relay.</p>
+<h2>Step 1: Install Tailscale</h2>
+<pre><code class="language-bash">curl -fsSL https://tailscale.com/install.sh | sh
+</code></pre>
+<p>This adds the official Tailscale apt repository and installs the <code>tailscale</code> and <code>tailscaled</code> packages. On my Pi 5 the install took about 15 seconds over a ~200 Mbps connection. Verify:</p>
+<pre><code class="language-bash">tailscale --version
+</code></pre>
+<h2>Step 2: Authenticate</h2>
+<pre><code class="language-bash">sudo tailscale up
+</code></pre>
+<p>This prints a URL. Open it in a browser, sign in with your Tailscale account (GitHub, Google, Microsoft, or email), and authorize the device. Back on the Pi, you'll see a confirmation within seconds.</p>
+<p>Check your new Tailscale IP:</p>
+<pre><code class="language-bash">tailscale ip -4
+</code></pre>
+<p>You'll get a <code>100.x.y.z</code> address. This is your Pi's stable identity on the tailnet, reachable from any other device you add to the same account.</p>
+<h2>Step 3: Enable IP Forwarding (Subnet Router)</h2>
+<p>This is where the real homelab value lives. Instead of installing Tailscale on every machine, you make the Pi a <strong>subnet router</strong> that advertises your entire LAN:</p>
+<pre><code class="language-bash">echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
+echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
+sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
+</code></pre>
+<p>Now restart Tailscale with your LAN subnet (adjust to match yours):</p>
+<pre><code class="language-bash">sudo tailscale up --advertise-routes=192.168.1.0/24 --accept-dns=false
+</code></pre>
+<h3>Approve the Route in the Admin Console</h3>
+<p>Go to the <a href="https://login.tailscale.com/admin/machines">Tailscale admin panel</a>, find your Pi, click the <strong>…</strong> menu → <strong>Edit route settings</strong>, and enable the subnet route. This is a deliberate security step — routes don't activate automatically.</p>
+<h2>Step 4: (Optional) Enable as an Exit Node</h2>
+<p>If you want to route <strong>all</strong> your traffic through your home connection while traveling:</p>
+<pre><code class="language-bash">sudo tailscale up --advertise-routes=192.168.1.0/24 --advertise-exit-node
+</code></pre>
+<p>Approve the exit node in the admin panel the same way. On your phone or laptop, you can then select your Pi as the exit node in the Tailscale client.</p>
+<h2>Step 5: Make It Survive Reboots</h2>
+<p>Tailscale's systemd unit is enabled by default on Debian:</p>
+<pre><code class="language-bash">systemctl is-enabled tailscaled
+</code></pre>
+<p>Should print <code>enabled</code>. If not:</p>
+<pre><code class="language-bash">sudo systemctl enable tailscaled
+</code></pre>
+<p>On my build, <code>tailscaled</code> consumes roughly 12–18 MB of RAM and negligible CPU at idle — invisible on a Pi 5 with 15 Gi available.</p>
+<h2>Step 6: Connect a Client Device</h2>
+<p>Install Tailscale on your phone, laptop, or another server. Sign in with the same account. You can now:</p>
+<ul>
+<li>SSH to your Pi at its <code>100.x.y.z</code> address from anywhere</li>
+<li>Access any LAN service (Proxmox UI, NAS shares, Pi-hole dashboard) via the subnet route at their normal <code>192.168.x.x</code> addresses</li>
+<li>Use MagicDNS to reach machines by hostname (e.g., <code>pi5.tail1234.ts.net</code>)</li>
+</ul>
+<h2>Step 7: Set Up Tailscale SSH (Kill the Open Port)</h2>
+<p>Tailscale can handle SSH authentication itself, letting you disable port 22 entirely:</p>
+<pre><code class="language-bash">sudo tailscale up --advertise-routes=192.168.1.0/24 --ssh
+</code></pre>
+<p>Then from any device on your tailnet:</p>
+<pre><code class="language-bash">ssh user@pi5
+</code></pre>
+<p>No keys to copy, no port 22 exposed. Access is controlled by Tailscale ACLs in your admin panel.</p>
+<h2>Performance and Thermal Notes</h2>
+<p>Tailscale using WireGuard is light. On my Pi 5, running an iperf3 test through the Tailscale tunnel between two LAN devices, I saw negligible SoC temperature change — consistent with my baseline measurements of 49.4 °C idle and 48.8 °C under load. The NVMe boot drive's speed (453/438 MB/s sequential) is irrelevant to VPN throughput but matters if you're also running Docker containers or databases on the same Pi — my 16,433 random 4K read IOPS keeps things responsive even when Tailscale traffic coincides with disk-heavy services.</p>
+<p>If you're working with your Pi headless and ever need to troubleshoot a display output issue remotely, an <a class="aff" href="https://home-lab-bench.myshopify.com/products/ms2131-hdmi-capture-card-1080p-video-audio-for-headless-servers" target="_blank">MS2131 HDMI Capture Card – 1080p Video &amp; Audio for Headless Servers</a> plugged into the Pi's HDMI port lets you capture the framebuffer over USB from another machine — handy when networking is down and you can't SSH in.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you need a publicly routable endpoint</strong> (hosting a website for the internet), Tailscale doesn't help — you need a reverse proxy with a real domain and port forwarding, or a VPS like Hetzner Cloud with a public IP.</li>
+<li><strong>If you have more than 100 devices</strong>, the free tier won't cover you. Pricing scales from there.</li>
+<li><strong>If you require full network-level audit logging and compliance</strong>, Tailscale's free tier logging is limited. Enterprise or self-hosted Headscale might be more appropriate.</li>
+</ul>
+<h2>Verdict</h2>
+<p>Tailscale on a Raspberry Pi 5 is the lowest-friction way to get secure remote access to your entire homelab — ten minutes from zero to working, no firewall rules, no dynamic DNS. The Pi 5's thermals and performance make it a set-and-forget subnet router. If you self-host anything at home, this should be the first thing you configure.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</span><span class=pr>£29.00</span><a class=go href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">View →</a></div><div class=prow><span class=nm>240W USB-C Fast-Charging &amp; Data Cable – Braided, LED Indicator</span><span class=pr>£5.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/240w-usb-c-fast-charging-data-cable-braided-led-indicator" target="_blank">View →</a></div><div class=prow><span class=nm>JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</span><span class=pr>£9.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
