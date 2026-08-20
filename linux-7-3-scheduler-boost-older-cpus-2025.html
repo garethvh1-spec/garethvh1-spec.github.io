@@ -1,0 +1,66 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Linux 7.3 Scheduler Fix Boosts Older CPUs Up to 7x (2025)</title>
+<meta name=description content="Linux kernel 7.3 brings a scheduler patch that massively improves minimum framerates on older CPUs — great news for budget homelabbers."><link rel="canonical" href="https://homelabbench.com/linux-7-3-scheduler-boost-older-cpus-2025.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-08-20</p><p>A scheduler patch heading into <strong>Linux kernel 7.3</strong> is delivering up to a <strong>7x improvement in minimum framerates</strong> on older, asymmetric CPUs. If you're running repurposed hardware in your homelab — and let's be honest, most of us are — this is genuinely useful news.</p>
+<h2>What's actually happening?</h2>
+<p>The fix targets the kernel's task scheduler, specifically how it handles workloads on CPUs with mixed core types (big.LITTLE-style designs) and older silicon where the scheduler previously made poor placement decisions. The result was occasional brutal frame drops and generally lumpy performance. The patch smooths that out dramatically.</p>
+<p>While the benchmarks focus on framerates (gaming context), the same scheduler logic affects any workload where tasks bounce between cores — that includes VMs, containers, and transcoding jobs on older Xeon or consumer chips you've pulled from a retired desktop.</p>
+<h2>Why homelabbers should care</h2>
+<p>With tariff chaos pushing new hardware prices up, plenty of us are squeezing life out of older gear. A kernel-level improvement that makes your existing CPU behave more sensibly under load is basically free performance. No new hardware, no config changes — just update when your distro ships the kernel.</p>
+<p>If you're running <strong>Proxmox</strong>, TrueNAS Scale, or any Debian/Ubuntu-based setup, expect this to land in due course once 7.3 is released and distros pull it in. Arch and Fedora users will likely see it sooner.</p>
+<h2>Caveats</h2>
+<p>The 7x figure is a <strong>minimum framerate</strong> improvement in specific test scenarios — average performance gains will be more modest. And if you're already on modern symmetric-core hardware, you may not notice much difference. This really shines on older or mixed-core setups.</p>
+<p>Read the full breakdown at <a href="https://www.xda-developers.com/linux-73-will-boost-minimum-framerates-by-7x-on-older-cpus-which-is-perfect-in-this-hardware-crisis/">XDA Developers</a>.</p>
+<h2>What to do</h2>
+<p>Nothing yet — just keep this on your radar and update your kernel when it lands. In the meantime, if you're breathing life into older kit, make sure your cooling is sorted. <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> is worth having around for keeping ageing fans spinning properly.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</span><span class=pr>£9.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">View →</a></div><div class=prow><span class=nm>M3/M4 Metal Screw &amp; Pin Assortment Box – 500 Pieces with Spanners</span><span class=pr>£11.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m3-m4-metal-screw-pin-assortment-box-500-pieces-with-spanners" target="_blank">View →</a></div><div class=prow><span class=nm>The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</span><span class=pr>£29.00</span><a class=go href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
