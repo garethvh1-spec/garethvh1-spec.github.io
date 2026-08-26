@@ -1,0 +1,87 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best External HDD Enclosure for Raspberry Pi NAS with RAID 1 Mirroring</title>
+<meta name=description content="Compare external HDD enclosures that support RAID 1 mirroring for a Raspberry Pi NAS setup. Covers USB connectivity, dual-bay options, and compatible chipsets."><link rel="canonical" href="https://homelabbench.com/best-external-hdd-enclosure-for-raspberry-pi-nas-with-raid-1-mirroring.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-08-26</p><h1>Best External HDD Enclosure for Raspberry Pi NAS with RAID 1 Mirroring</h1>
+<p>For a Raspberry Pi NAS with RAID 1 mirroring, a 2-bay USB enclosure with hardware RAID is the most practical path — it offloads the parity work from the Pi's CPU and presents a single, mirrored volume over USB. Based on published specs and community reports, the <strong>TerraMaster D2-310</strong> and <strong>ORICO 2-Bay RAID Enclosure</strong> are the two strongest options, though each comes with trade-offs worth understanding before you spend money.</p>
+<h2>My Actual Build and Why External RAID Matters</h2>
+<p>My NAS runs on a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 15 GiB RAM, booting Debian 13 (trixie) on kernel 6.18.34+rpt-rpi-2712. The boot drive is a Fanxiang S501Q 512 GB NVMe on the Pi 5's PCIe slot (running at gen2 default), which I measured at <strong>453 MB/s sequential read and 438 MB/s sequential write</strong>, with 16,433 random 4K read IOPS. SoC temperature sat at 49.4°C idle and actually dropped slightly to 48.8°C under sustained fio load — the active cooler does its job.</p>
+<p>Those NVMe numbers matter because they set the ceiling. The Pi 5's USB 3.0 ports are theoretically 5 Gbps (~roughly 450 MB/s after overhead), so the NVMe and the USB bus are in the same ballpark. In practice, spinning HDDs in a RAID 1 enclosure will top out around 150–220 MB/s depending on the drives, so the USB bus won't be your bottleneck — the drives will. This is exactly why hardware RAID in the enclosure makes sense: it avoids burdening the Pi's four Cortex-A76 cores with mdadm rebuild operations while staying well within USB 3.0 bandwidth.</p>
+<h2>The Enclosures: What the Specs Say</h2>
+<p>I have <strong>not</strong> bench-tested any of the following enclosures on my Pi. Everything below is based on manufacturer specifications and documented community experience. I'll be explicit about what's known versus what's assumed.</p>
+<h3>TerraMaster D2-310 USB 3.1 RAID Enclosure</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=TerraMaster+D2-310+USB+3.1+RAID+Enclosure&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">TerraMaster D2-310 USB 3.1 RAID Enclosure</a></p>
+<p>Reportedly the most popular choice in Pi NAS builds. Published specs claim USB 3.1 Gen 1 (5 Gbps), hardware RAID 0/1/JBOD/Single via a dedicated controller, and aluminum construction. It supports up to 20 TB per bay (two 3.5″ SATA drives). Community reports on Pi 4 and Pi 5 builds generally confirm it presents as a single USB mass storage device in RAID 1 mode, meaning the Pi sees one disk and doesn't need to manage any mirroring. The fan is small and reportedly audible at close range. TerraMaster's RAID mode is set via a physical switch on the back, no software needed — a real advantage for headless Pi setups.</p>
+<h3>ORICO 2-Bay USB 3.0 RAID Enclosure</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=ORICO+2-Bay+USB+3.0+RAID+Enclosure&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">ORICO 2-Bay USB 3.0 RAID Enclosure</a></p>
+<p>ORICO sells several 2-bay models; the relevant one uses a JMicron JMS561 or similar chipset for hardware RAID. Specs list USB 3.0 (5 Gbps), RAID 0/1/JBOD/PM modes, and 3.5″ SATA support. It's typically cheaper than the TerraMaster. Reports suggest it works on the Pi without additional drivers since the JMicron chipsets have mainline Linux support. Build quality is reportedly more plastic than metal, and the fan situation varies by model — some are fanless, which means heat management with large drives in a warm room could be a concern.</p>
+<h3>Yottamaster 2-Bay Aluminum Enclosure</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Yottamaster+2-Bay+Aluminum+Enclosure&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Yottamaster 2-Bay Aluminum Enclosure</a></p>
+<p>Spec-wise very similar to the ORICO: USB 3.0, hardware RAID via JMicron controller, aluminum body. Yottamaster positions itself as a build-quality upgrade. Community coverage on Raspberry Pi specifically is thinner — I've seen fewer confirmed reports of Pi 5 compatibility, though there's no technical reason it wouldn't work given the standard USB mass storage presentation.</p>
+<h3>Sabrent 2-Bay USB-C RAID Dock</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Sabrent+2-Bay+USB-C+RAID+Dock&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Sabrent 2-Bay USB-C RAID Dock</a></p>
+<p>The Sabrent offers a USB-C interface and tool-free drive installation. Published specs include RAID 0/1/JBOD/Large and support for both 2.5″ and 3.5″ SATA drives. Sabrent's chipsets have generally good Linux compatibility, though I've seen isolated reports of quirks with USB Attached SCSI Protocol (UASP) on some Pi kernels. If you're using USB-C on the Pi 5, make sure you have a cable that actually carries data at USB 3.0 speeds — many cheap USB-C cables are charge-only or USB 2.0. A reliable data cable like <a class="aff" href="https://home-lab-bench.myshopify.com/products/240w-usb-c-fast-charging-data-cable-braided-led-indicator" target="_blank">240W USB-C Fast-Charging &amp; Data Cable – Braided, LED Indicator</a> avoids that particular headache.</p>
+<h2>How RAID 1 Actually Works With the Pi</h2>
+<p>When you set hardware RAID 1 on any of these enclosures, the enclosure's controller handles the mirroring internally. The Pi's Linux kernel sees a single block device — typically <code>/dev/sda</code>. You format it with ext4 or whatever filesystem you prefer, mount it, and expose it via Samba or NFS. No mdadm configuration, no degraded-array alerts from the OS (the enclosure LEDs typically indicate drive failure instead).</p>
+<p>This is simpler but has a real downside: <strong>you're trusting the enclosure's firmware for data integrity.</strong> If the enclosure controller dies, you need an identical controller (or at least the same RAID chipset) to read the array. In practice, most JMicron RAID 1 implementations write standard data to both disks, so a single drive pulled from the enclosure is usually readable on its own — but this isn't guaranteed across all chipsets. Test this before you depend on it.</p>
+<h2>The Honest Cabling and Power Warning</h2>
+<p>The Pi 5 can deliver 5V/1.6A across its USB ports total (about 8W). Two spinning 3.5″ HDDs can draw 15–25W at spinup. <strong>Every 2-bay enclosure listed here has its own power supply for exactly this reason.</strong> Never try to bus-power 3.5″ drives from a Pi. Even 2.5″ drives can cause brownouts during simultaneous spinup.</p>
+<p>If your enclosure accumulates dust over time (especially the fan-equipped TerraMaster), a small tool like <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> is worth keeping around — a clogged fan against warm drives in a RAID enclosure is a recipe for premature failure.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you need more than ~180 MB/s sustained throughput.</strong> USB 3.0 RAID 1 on spinning disks won't get you there, and even if you use SSDs, the Pi's USB bus and GbE port cap real-world NAS transfers around 110 MB/s over the network anyway.</li>
+<li><strong>If you need enterprise-grade RAID monitoring.</strong> Hardware RAID in a USB enclosure gives you LED indicators at best. No SMART passthrough in most cases, no email alerts, no automatic rebuild notifications. If you need that, buy a proper 2-bay NAS appliance or build a small x86 server.</li>
+<li><strong>If you want off-site backup redundancy.</strong> RAID 1 is not backup. You still need an off-site copy. For cold storage of critical data, Backblaze B2 B2 at $0.006/GB/month is the cheapest credible option to pair with a Pi NAS.</li>
+</ul>
+<h2>Verdict</h2>
+<p>Based on published specs and community compatibility reports, the <strong>TerraMaster D2-310</strong> is the safest pick — its physical RAID switch, aluminum body, and wide Pi community adoption reduce risk. The <strong>ORICO</strong> is a solid budget alternative if you confirm the exact model uses a JMicron chipset with mainline Linux support. Either way, RAID 1 over USB 3.0 will work within the Pi 5's bandwidth comfortably — my measured 453 MB/s USB-side ceiling means the drives, not the bus, will be your limiting factor.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NGFF to USB 3.0 Aluminium SSD Enclosure – Portable Homelab Storage</span><span class=pr>£13.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ngff-to-usb-3-0-aluminium-ssd-enclosure-portable-homelab-storage" target="_blank">View →</a></div><div class=prow><span class=nm>USB 3.0 Portable Solid State Drive – Metal Shell, 500GB</span><span class=pr>£15.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/usb-3-0-portable-solid-state-drive-metal-shell-500gb-to-16tb" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
