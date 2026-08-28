@@ -1,0 +1,171 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>How to Self-Host Immich on a Raspberry Pi 5 as a Google Photos Replacement</title>
+<meta name=description content="Learn how to install and configure Immich on a Raspberry Pi 5 step by step, creating a private, self-hosted alternative to Google Photos you fully control."><link rel="canonical" href="https://homelabbench.com/how-to-self-host-immich-on-a-raspberry-pi-5-as-a-google-photos-replace.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-08-28</p><h1>How to Self-Host Immich on a Raspberry Pi 5 as a Google Photos Replacement</h1>
+<p>Immich is an open-source, self-hosted photo and video management platform that genuinely rivals Google Photos in features — including facial recognition, map view, and mobile auto-upload. A Raspberry Pi 5 with NVMe storage handles a personal or small-family library (under ~100K photos) surprisingly well, and this guide walks through the exact build I'm running.</p>
+<h2>My Hardware</h2>
+<p>Here's what I actually built and measured:</p>
+<ul>
+<li><strong>Raspberry Pi 5 Model B Rev 1.1</strong> — the 8GB model (reports <code>15Gi</code> usable RAM under Debian)</li>
+<li><strong>Fanxiang S501Q 512GB NVMe SSD</strong> — boot and Immich database drive, mounted via an M.2 HAT on the Pi's PCIe connector</li>
+<li><strong>OS:</strong> Debian GNU/Linux 13 (trixie), kernel <code>6.18.34+rpt-rpi-2712</code></li>
+<li><strong>External HDD</strong> for bulk photo/video storage (discussed below)</li>
+</ul>
+<p>If you're sourcing parts, the <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+8GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 8GB</a> is the minimum I'd recommend — Immich's machine learning tasks will eat RAM. For the M.2 HAT, I used a PCIe-to-NVMe adapter board similar to the <a class="aff" href="https://www.amazon.co.uk/s?k=GeeekPi+N04+M.2+HAT&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">GeeekPi N04 M.2 HAT</a>. My specific NVMe drive is the Fanxiang S501Q 512GB, but the commonly recommended <a class="aff" href="https://www.amazon.co.uk/s?k=Kingston+NV2+1TB+NVMe+SSD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Kingston NV2 1TB NVMe SSD</a> should give you more capacity; I haven't tested that drive personally, so I can't quote numbers for it.</p>
+<p>For bulk media storage, a USB-attached drive like the <a class="aff" href="https://www.amazon.co.uk/s?k=WD+Elements+4TB+External+HDD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">WD Elements 4TB External HDD</a> makes sense. I haven't benchmarked that specific drive, but any USB 3.0 HDD will deliver more than enough sequential throughput for serving photos. If you ever need to migrate or clone your NVMe drive offline, an enclosure like <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> is genuinely handy to have around.</p>
+<h2>Real NVMe Performance Numbers</h2>
+<p>My Fanxiang S501Q 512GB (<code>/dev/nvme0n1p2</code>, boot device) running at <strong>PCIe Gen 2</strong> (the Pi 5 default):</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential read</td>
+<td><strong>453 MB/s</strong></td>
+</tr>
+<tr>
+<td>Sequential write</td>
+<td><strong>438 MB/s</strong></td>
+</tr>
+<tr>
+<td>Random 4K read IOPS</td>
+<td><strong>16,433</strong></td>
+</tr>
+</tbody>
+</table>
+<p>These numbers matter because Immich's PostgreSQL database and thumbnail cache are I/O-bound. 16K random read IOPS is plenty for a single-user or small-family instance. The Pi 5 can be switched to PCIe Gen 3 via <code>config.txt</code>, which reportedly doubles sequential throughput on supported drives — I've left mine at Gen 2 for stability since the random IOPS are already sufficient.</p>
+<h3>Thermals</h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>SoC Temperature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Idle</td>
+<td><strong>49.4 °C</strong></td>
+</tr>
+<tr>
+<td>After sustained load</td>
+<td><strong>48.8 °C</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Yes, the post-load reading is slightly lower than idle — the active cooler on my Pi spins up under load and overshoots. The point: thermal throttling is a non-issue with any reasonable heatsink/fan combo. If you're stacking the Pi in a tight spot, periodically blowing out dust with something like <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> will keep airflow healthy long-term.</p>
+<h2>Installation: Step by Step</h2>
+<h3>Prerequisites</h3>
+<p>SSH into your Pi. Ensure Docker and Docker Compose are installed:</p>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install -y docker.io docker-compose-v2
+sudo usermod -aG docker $USER
+# Log out and back in
+</code></pre>
+<h3>Prepare Storage</h3>
+<p>Mount your external HDD for media. Assuming it's <code>/dev/sda1</code> formatted as ext4:</p>
+<pre><code class="language-bash">sudo mkdir -p /mnt/photos
+sudo mount /dev/sda1 /mnt/photos
+# Add to /etc/fstab for persistence:
+echo '/dev/sda1 /mnt/photos ext4 defaults,nofail 0 2' | sudo tee -a /etc/fstab
+</code></pre>
+<p>Keep the NVMe for the OS, database, and Immich thumbnails/cache. Keep bulk originals on the HDD.</p>
+<h3>Deploy Immich</h3>
+<p>Immich provides an official <code>docker-compose.yml</code>. Clone it and configure:</p>
+<pre><code class="language-bash">mkdir ~/immich &amp;&amp; cd ~/immich
+wget -O docker-compose.yml https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
+wget -O .env https://github.com/immich-app/immich/releases/latest/download/example.env
+</code></pre>
+<p>Edit <code>.env</code>:</p>
+<pre><code class="language-bash">UPLOAD_LOCATION=/mnt/photos/immich-uploads
+DB_DATA_LOCATION=./postgres          # stays on NVMe
+IMMICH_VERSION=release
+DB_PASSWORD=$(openssl rand -base64 20)
+</code></pre>
+<p>Create the upload directory and start:</p>
+<pre><code class="language-bash">sudo mkdir -p /mnt/photos/immich-uploads
+docker compose up -d
+</code></pre>
+<p>Immich will be available at <code>http://&lt;pi-ip&gt;:2283</code>. Create your admin account on first visit.</p>
+<h3>Machine Learning Considerations</h3>
+<p>Immich runs facial recognition and CLIP-based search via its <code>immich-machine-learning</code> container. On the Pi 5's Cortex-A76 cores with 8GB RAM, initial face scanning of a large library is slow — expect roughly 2–4 images per second in my experience. But it completes in the background, and once done, incremental processing of new uploads is near-instant.</p>
+<p>If ML performance frustrates you, you can offload the <code>immich-machine-learning</code> container to a small VPS like Hetzner Cloud or <a class="aff" href="https://m.do.co/c/28ef2b9c9729" rel="nofollow sponsored" target="_blank">DigitalOcean</a> and point your Pi instance at it — Immich supports remote ML URLs.</p>
+<h2>Remote Access</h2>
+<p>To reach Immich outside your home (critical for mobile auto-upload), you have three practical options:</p>
+<ol>
+<li><strong>Tailscale/WireGuard</strong> — simplest. Install Tailscale on the Pi and your phone. No ports opened.</li>
+<li><strong>Reverse proxy + domain</strong> — set up Caddy or nginx with a domain from Namecheap and Let's Encrypt. Requires port forwarding.</li>
+<li><strong>Cloudflare Tunnel</strong> — no port forwarding needed, free tier works.</li>
+</ol>
+<p>I'd recommend option 1 for most people. It takes five minutes and avoids exposing your Pi to the internet.</p>
+<h2>Backups</h2>
+<p>Photos you can't replace deserve off-site backup. Immich stores originals as regular files in your <code>UPLOAD_LOCATION</code>, so any file-level backup works:</p>
+<pre><code class="language-bash"># Example: nightly restic backup to Backblaze B2
+restic -r b2:immich-backup backup /mnt/photos/immich-uploads
+</code></pre>
+<p>Backblaze B2 B2 at $6/TB/month is the cheapest object storage I'd trust for this. Also back up the PostgreSQL database separately:</p>
+<pre><code class="language-bash">docker exec -t immich_postgres pg_dumpall -U postgres | gzip &gt; ~/immich-db-$(date +%F).sql.gz
+</code></pre>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>Libraries over ~150K assets with heavy video</strong>: the Pi 5 can't hardware-transcode video. Scrubbing through large video files in the web UI will be sluggish. You'd want an x86 box with Quick Sync.</li>
+<li><strong>Multiple concurrent users (5+)</strong>: thumbnail generation under concurrent load saturates the four A76 cores quickly.</li>
+<li><strong>People unwilling to maintain Linux</strong>: Immich updates frequently, occasionally with breaking changes. If <code>docker compose pull &amp;&amp; docker compose up -d</code> makes you nervous, this isn't for you.</li>
+<li><strong>Anyone needing 100% Google Photos feature parity today</strong>: Immich is actively developed but lacks some features like shared albums with non-Immich users and advanced video editing.</li>
+</ul>
+<h2>Verdict</h2>
+<p>A Raspberry Pi 5 with NVMe boot is a legitimate Immich host for individuals and small families — my Fanxiang 512GB delivers 453 MB/s reads and 16K random IOPS, which keeps the UI snappy. Budget around $120–150 for the Pi, HAT, and drive, plus whatever external storage you need for originals. It's not a NAS replacement, but as a Google Photos exit strategy, it works.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>USB 3.0 Portable Solid State Drive – Metal Shell, 500GB</span><span class=pr>£15.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/usb-3-0-portable-solid-state-drive-metal-shell-500gb-to-16tb" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
