@@ -1,0 +1,113 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best Managed Switch with VLANs for Beginner Homelab Under $100 (Pi and Docker Friendly)</title>
+<meta name=description content="Find the best managed switch under $100 for your first homelab. Practical VLAN setup advice for beginners running Pi, Docker, and self-hosted services."><link rel="canonical" href="https://homelabbench.com/best-managed-switch-with-vlans-for-beginner-homelab-under-100-pi-and-d.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-08-31</p><h1>Best Managed Switch with VLANs for Beginner Homelab Under $100 (Pi and Docker Friendly)</h1>
+<p>For a beginner homelab running a Pi and Docker containers, the TP-Link TL-SG108E is the easiest and cheapest path to proper VLAN segmentation — typically around $30 and genuinely functional for the job. The Netgear GS308E and MikroTik CSS326 are also worth considering depending on how deep you want to go, but each has real trade-offs I'll break down below.</p>
+<h2>Why VLANs Actually Matter on a Pi Homelab</h2>
+<p>If you're running Docker containers on a Pi — say Pihole, Home Assistant, a reverse proxy, and a media server — everything shares one flat network by default. That means your IoT thermostat, your kid's tablet, and your self-hosted Nextcloud instance are all neighbors with no fences. VLANs let you segment traffic at Layer 2 so compromised IoT devices can't sniff traffic headed for your Docker services.</p>
+<p>On my own build — a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> running <strong>Debian GNU/Linux 13 (trixie)</strong> on kernel <strong>6.18.34+rpt-rpi-2712</strong> with <strong>15Gi RAM</strong> — I run multiple Docker containers off an NVMe boot drive (<a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB</a>, mounted via the Pi 5's PCIe slot at <strong>gen2 default</strong>). Real sequential throughput: <strong>453 MB/s read, 438 MB/s write</strong>, with <strong>16,433 random 4K read IOPS</strong>. The SoC idles at <strong>49.4°C</strong> and actually dropped slightly to <strong>48.8°C</strong> under sustained load (active cooling doing its job). The point: this Pi is fast enough that the network — not storage — becomes the bottleneck if you're still on a dumb gigabit switch with no segmentation.</p>
+<p>A managed switch with 802.1Q VLAN tagging lets you create tagged trunk ports to the Pi's single Ethernet interface. Linux handles VLAN subinterfaces natively (<code>ip link add link eth0 name eth0.10 type vlan id 10</code>), so your Pi can route or serve traffic on multiple VLANs simultaneously without extra NICs.</p>
+<h2>The Three Switches Worth Considering</h2>
+<h3>TP-Link TL-SG108E (~$30)</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=TP-Link+TL-SG108E+8-Port+Easy+Smart+Switch&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">TP-Link TL-SG108E 8-Port Easy Smart Switch</a></p>
+<p>Based on published specs and widespread community reports (I haven't bench-tested this switch myself), this is the default recommendation for beginners, and for good reason:</p>
+<ul>
+<li><strong>8 gigabit ports</strong>, 802.1Q VLAN tagging, port-based VLANs, IGMP snooping</li>
+<li>Web GUI is basic but functional — no CLI, no SSH</li>
+<li>Managed via a browser-based interface (older hardware revisions required a Windows utility; current v6+ hardware uses a standard web UI)</li>
+<li>Fanless, tiny, metal case, virtually silent</li>
+<li>No SNMP on some firmware versions, limited QoS options</li>
+</ul>
+<p>The management interface is not sophisticated. You won't get per-port traffic graphs or deep ACLs. But for creating 3–4 VLANs (e.g., trusted LAN, IoT, guest, management), it works and doesn't require reading a 400-page manual.</p>
+<h3>Netgear GS308E (~$35)</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Netgear+GS308E+8-Port+Plus+Switch&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Netgear GS308E 8-Port Plus Switch</a></p>
+<p>Reportedly very similar in capability to the TL-SG108E. Key differences based on specs and community feedback:</p>
+<ul>
+<li>Also 8 gigabit ports with 802.1Q VLAN support</li>
+<li>Web-based management (Netgear calls it "Plus" managed)</li>
+<li>Slightly more polished UI than the TP-Link, reportedly</li>
+<li>Some users report firmware update processes being clunkier</li>
+<li>Plastic housing on most versions (versus TP-Link's metal)</li>
+</ul>
+<p>Honestly, between the GS308E and TL-SG108E, the functional difference is minimal. Pick whichever is cheaper at time of purchase. Neither gives you a CLI.</p>
+<h3>MikroTik CSS326-24G-2S+RM (~$90–100)</h3>
+<p>This is a different category entirely. Based on published specs:</p>
+<ul>
+<li><strong>24 gigabit ports plus 2 SFP+ 10G ports</strong> in a 1U rackmount form factor</li>
+<li>Full SwOS with a real web interface, more granular VLAN control, port mirroring, bandwidth limiting</li>
+<li>The SFP+ ports are genuinely useful if you ever add a NAS or a second node with a 10G NIC</li>
+<li>Fanless</li>
+<li>Steeper learning curve — not hard, but not point-and-click-obvious either</li>
+</ul>
+<p>If you know you're going to expand beyond a Pi and a few devices — maybe adding a used Dell Optiplex running Proxmox, a NAS, or a second Pi — spending the extra $60 now saves you from replacing the 8-port switch in six months.</p>
+<h2>How VLAN Trunking Works with a Pi 5</h2>
+<p>On my Pi 5 running Debian Trixie, setting up VLAN subinterfaces is straightforward. After connecting the Pi to a tagged trunk port on your managed switch:</p>
+<pre><code class="language-bash">sudo ip link add link eth0 name eth0.10 type vlan id 10
+sudo ip addr add 10.0.10.1/24 dev eth0.10
+sudo ip link set dev eth0.10 up
+</code></pre>
+<p>For persistence across reboots, define the interfaces in <code>/etc/network/interfaces</code> or via a netplan config. Docker containers can then bind to specific VLAN interfaces using macvlan or ipvlan network drivers, giving each service its own VLAN presence.</p>
+<p>With my NVMe boot drive delivering <strong>453 MB/s sequential reads</strong>, the storage layer isn't a constraint — the Pi's single gigabit Ethernet port (roughly 940 Mbps practical throughput) is the ceiling. VLANs don't reduce that throughput in any meaningful way; tagged frames add 4 bytes of overhead per packet.</p>
+<h2>Who Should NOT Buy a Managed Switch Yet</h2>
+<ul>
+<li><strong>If you run fewer than 5 devices total</strong>, a dumb switch is fine. VLANs add complexity you don't need.</li>
+<li><strong>If you want firewall rules between VLANs</strong>, a managed switch alone won't do it. You need a router or firewall (OPNsense, pfSense, even the Pi itself) doing inter-VLAN routing. The switch just handles the tagging.</li>
+<li><strong>If you need PoE</strong> for access points or cameras, none of these three switches provide it. You'd need a TP-Link TL-SG108PE or similar, which runs closer to $70.</li>
+</ul>
+<h2>Practical Tips</h2>
+<p>Keep your switch firmware updated — all three vendors have had VLAN-related bugs in past firmware versions. Document your VLAN IDs and port assignments somewhere (even a text file in your homelab Git repo). Start with just two VLANs: a trusted LAN and an IoT VLAN. Add more only when you have a real reason.</p>
+<p>If you're cloning or reimaging your Pi's NVMe drive during setup experiments, an external NVMe enclosure saves time over reflashing. I keep one around for exactly this purpose: <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a>.</p>
+<p>For a deeper walkthrough on building and configuring a Pi-based homelab from scratch — including network segmentation, Docker orchestration, and the AI agent setup I run on my own Pi 5 — take a look at <a class="aff" href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</a>.</p>
+<h2>Verdict</h2>
+<p><strong>The TP-Link TL-SG108E is the right first managed switch for most beginners</strong> — it's $30, it does 802.1Q VLANs, and it won't fight you during setup. If you're already planning to grow past 8 ports or want SFP+ uplinks, skip straight to the MikroTik CSS326 and save yourself a replacement cycle. Either way, VLANs on a Pi 5 running Docker are trivially easy on the Linux side — the switch is just the piece that makes the segmentation real on the wire.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</span><span class=pr>£29.00</span><a class=go href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA, USB 3.1 Gen2 Type-C, Aluminium</span><span class=pr>£66.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-3-1-gen2-type-c-aluminium" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
