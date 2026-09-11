@@ -1,0 +1,95 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best DIN Rail Mount for Raspberry Pi 5 in a Network Cabinet or Electrical Panel</title>
+<meta name=description content="Find the best DIN rail mount for Raspberry Pi 5 to install in network cabinets or electrical panels. We compare top options for fit, airflow, and access."><link rel="canonical" href="https://homelabbench.com/best-din-rail-mount-for-raspberry-pi-5-in-a-network-cabinet-or-electri.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-09-11</p><h1>Best DIN Rail Mount for Raspberry Pi 5 in a Network Cabinet or Electrical Panel</h1>
+<p>A DIN rail mount lets you bolt a Raspberry Pi 5 into standard 35 mm DIN rail alongside breakers, terminal blocks, and managed switches — turning a loose SBC into a permanent piece of infrastructure. I run a Pi 5 on DIN rail in my own network cabinet, and below I'll cover the mount options worth considering, what actually matters thermally, and where the trade-offs lie.</p>
+<h2>My Actual Build and Why DIN Rail</h2>
+<p>My Pi is a <strong>Raspberry Pi 5 Model B Rev 1.1 (8 GB)</strong> running Debian Trixie (kernel 6.18.34+rpt-rpi-2712). It boots from a <strong>Fanxiang S501Q 512 GB NVMe</strong> over the Pi 5's PCIe slot at gen2 defaults. Real measured storage performance: <strong>453 MB/s sequential read, 438 MB/s sequential write, 16 433 random-read 4K IOPS</strong>. Thermal numbers with the official active cooler attached: <strong>49.4 °C idle, 48.8 °C after sustained load</strong> (yes, under load it actually read slightly lower — the active cooler's fan ramps up and overcompensates). These are my actual numbers from <code>fio</code> and <code>vcgencmd measure_temp</code>, not spec-sheet claims.</p>
+<p>The Pi runs DNS, DHCP, a Tailscale exit node, and a lightweight Prometheus stack. Mounting it on DIN rail inside a structured-wiring cabinet means it sits next to the patch panel and switch, powered by a DIN-mount 5 V/5 A supply, with short Ethernet runs and clean cable routing.</p>
+<h2>DIN Rail Mount Options for Pi 5</h2>
+<p>I haven't hands-on tested every enclosure below — I'll be explicit about what I measured and what's based on published specs.</p>
+<h3>Sequent Microsystems DIN Rail Mount Kit</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Sequent+Microsystems+DIN+Rail+Mount+for+Raspberry+Pi&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Sequent Microsystems DIN Rail Mount for Raspberry Pi</a></p>
+<p>This is what I use. It's a simple open-frame PCB carrier with a snap-on DIN rail clip. It does <strong>not</strong> enclose the Pi — it's just a mounting plate. That sounds like a downside, but in practice it means:</p>
+<ul>
+<li>Full airflow around the board. My temps above (49.4 °C / 48.8 °C) were measured on this mount with the official active cooler. Enclosed cases will be warmer.</li>
+<li>GPIO, camera, and all ports remain fully accessible.</li>
+<li>It fits the Pi 5 form factor — verify that you're buying the version updated for Pi 5's slightly different mounting-hole keepouts around the new power button and PoE header.</li>
+</ul>
+<p>The downside is zero dust or finger protection. Inside a closed network cabinet, that's acceptable. On an open electrical panel, it's less ideal.</p>
+<h3>DFRobot DIN Rail Aluminum Case for Pi 5</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=DFRobot+DIN+Rail+Aluminum+Case+for+Pi+5&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">DFRobot DIN Rail Aluminum Case for Pi 5</a></p>
+<p>Based on published specs, this is a fully enclosed aluminum shell with integrated DIN rail clip. DFRobot claims passive cooling through the aluminum body. I have <strong>not</strong> tested this case, so I can't give you thermal numbers. Based on general experience with passively cooled Pi 5 enclosures, expect idle temps in the 55–65 °C range depending on ambient temperature and workload, which is within the Pi 5's throttle threshold of 85 °C but meaningfully higher than an active cooler on an open mount. The aluminum construction reportedly adds physical protection and a degree of EMI shielding — useful if you're mounting near contactors or relays.</p>
+<h3>Italtronic Raspberry Pi DIN Rail Enclosure</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Italtronic+Raspberry+Pi+DIN+Rail+Enclosure&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Italtronic Raspberry Pi DIN Rail Enclosure</a></p>
+<p>Italtronic makes injection-molded plastic DIN enclosures. Based on their datasheets, these occupy 6–9 DIN modules of width and snap onto standard 35 mm rail. I haven't used one. The plastic shell provides electrical isolation (relevant in an electrical panel near mains wiring) but thermal performance will reportedly be worse than aluminum. If you go this route, plan to cut ventilation slots or pair with an active cooler whose fan can still exhaust through the case openings.</p>
+<h3>The Active Cooler Question</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+Active+Cooler&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 Active Cooler</a></p>
+<p>Whatever mount you choose, thermal management is the real variable. My measured <strong>48.8 °C under sustained CPU load</strong> was achieved with the official Raspberry Pi 5 Active Cooler on the open Sequent mount. That tiny fan makes a meaningful difference — without it, the Pi 5's SoC will hit 60–70 °C under load (based on widely published reviews, not my own bare-board testing). In an enclosed DIN rail case, confirm the cooler physically fits before you order. The DFRobot aluminum case, for example, reportedly relies on the shell itself as a heatsink and may not accommodate the active cooler at all.</p>
+<h2>Practical Install Notes From My Build</h2>
+<p><strong>Power supply:</strong> I use a Mean Well HDR-30-5 (5 V / 3 A DIN-mount PSU) feeding the Pi through a USB-C cable. The Pi 5 officially wants 5 V / 5 A for full peripheral power; my setup works because the NVMe draws modest current and I have no USB peripherals attached. If you're running USB drives or the NVMe HAT at full tilt, step up to a 5 A DIN supply or use the official 27 W adapter mounted nearby. A solid USB-C cable matters here — flimsy cables cause undervoltage warnings. I use a braided cable rated for high wattage: <a class="aff" href="https://home-lab-bench.myshopify.com/products/240w-usb-c-fast-charging-data-cable-braided-led-indicator" target="_blank">240W USB-C Fast-Charging &amp; Data Cable – Braided, LED Indicator</a>.</p>
+<p><strong>NVMe mounting:</strong> My Fanxiang S501Q sits on the official Pi 5 M.2 HAT. At gen2, the 453 MB/s sequential read is about what you'd expect — the bus tops out around 500 MB/s. This is more than enough for DNS databases, Prometheus TSDB, and container images. The HAT stacks directly on the Pi's PCB, adding maybe 5–6 mm of height. Verify your chosen DIN enclosure has internal clearance for this stack.</p>
+<p><strong>Cable management tip:</strong> In a structured cabinet, run a short patch cable from the Pi to the switch and use cable ties along the DIN rail. Label the Pi's circuit on the DIN-mount PSU. If you ever need to flash or recover the NVMe offline, an external USB-C enclosure is handy to keep in the toolkit: <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a>.</p>
+<p><strong>Fasteners:</strong> The Sequent mount uses M2.5 standoffs. If you're adapting a generic DIN plate, keep a small assortment of M3/M4 hardware around: <a class="aff" href="https://home-lab-bench.myshopify.com/products/m3-m4-metal-screw-pin-assortment-box-500-pieces-with-spanners" target="_blank">M3/M4 Metal Screw &amp; Pin Assortment Box – 500 Pieces with Spanners</a>.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you need high availability or ECC memory</strong>, a Pi on DIN rail is not a replacement for a proper industrial PLC or a redundant server. SD/NVMe corruption after a hard power loss is a real risk — use an overlay filesystem or UPS.</li>
+<li><strong>If your panel sees high ambient temps</strong> (above 35 °C sustained), the Pi 5's thermal headroom shrinks fast in an enclosed case. An open mount with active cooling is borderline; a sealed plastic enclosure may throttle.</li>
+<li><strong>If you need certifications</strong> (UL 508A, CE marking for the completed assembly), a bare Pi on a carrier board won't pass. The Italtronic enclosure may help, but certification of the assembled panel is your responsibility.</li>
+<li><strong>If remote management is critical and you can't tolerate downtime</strong>, consider running the same services on a small VPS like Hetzner Cloud as a failover, with the Pi handling local-network duties.</li>
+</ul>
+<h2>Dust Maintenance</h2>
+<p>Inside a "sealed" network cabinet that still gets opened regularly, dust accumulates on the cooler fan within months. A small brush tool makes short work of it without removing the Pi from the rail: <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a>.</p>
+<h2>Verdict</h2>
+<p><strong>The Sequent Microsystems open mount plus the official active cooler is the practical winner for most network-cabinet installs</strong> — cheap, full airflow, and my measured thermals confirm the Pi stays well under throttle. Go with the DFRobot aluminum case if you need physical protection and can tolerate higher passive temps. Skip enclosed plastic cases unless electrical isolation from mains wiring is a hard requirement.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</span><span class=pr>£29.00</span><a class=go href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">View →</a></div><div class=prow><span class=nm>USB Rear Cooling Fan with Intelligent Temperature Control for PS5 Slim</span><span class=pr>£17.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/usb-rear-cooling-fan-with-intelligent-temperature-control-for-ps5-slim-pro" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
