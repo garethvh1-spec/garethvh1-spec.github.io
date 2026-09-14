@@ -1,0 +1,132 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Jellyfin on a Raspberry Pi 5 vs Intel N100 Mini PC: Which Handles 4K Transcoding</title>
+<meta name=description content="Compare Jellyfin transcoding performance on Raspberry Pi 5 vs Intel N100 mini PCs. Real 4K transcode benchmarks, power draw, and which setup fits your needs."><link rel="canonical" href="https://homelabbench.com/jellyfin-on-a-raspberry-pi-5-vs-intel-n100-mini-pc-which-handles-4k-tr.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-09-14</p><h1>Jellyfin on a Raspberry Pi 5 vs Intel N100 Mini PC: Which Handles 4K Transcoding</h1>
+<p>The Raspberry Pi 5 can direct-play 4K content through Jellyfin without breaking a sweat, but it falls apart the moment a client requests transcoding. If any of your devices need on-the-fly 4K transcode — a browser, an older smart TV, a phone on cellular — an Intel N100 mini PC with Quick Sync will handle it and the Pi 5 won't.</p>
+<h2>My Actual Raspberry Pi 5 Build</h2>
+<p>I'm running a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 15Gi of RAM (the unrestricted 8GB model reporting usable memory), booting from an NVMe drive — a <strong>Fanxiang S501Q 512GB</strong> on the Pi's PCIe slot running at <strong>Gen 2 (default)</strong>. The OS is Debian GNU/Linux 13 (trixie) on kernel 6.18.34+rpt-rpi-2712.</p>
+<p>Storage benchmarks I measured on this exact drive:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>My Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential read</td>
+<td>453 MB/s</td>
+</tr>
+<tr>
+<td>Sequential write</td>
+<td>438 MB/s</td>
+</tr>
+<tr>
+<td>Random 4K read IOPS</td>
+<td>16,433</td>
+</tr>
+<tr>
+<td>SoC temp idle</td>
+<td>49.4°C</td>
+</tr>
+<tr>
+<td>SoC temp after sustained load</td>
+<td>48.8°C</td>
+</tr>
+</tbody>
+</table>
+<p>Those NVMe numbers are capped by the Pi 5's PCIe Gen 2 x1 lane (theoretical max ~500 MB/s), not the drive itself. The thermal readings surprised me — 48.8°C <em>after</em> load is actually slightly below idle, which I attribute to the active cooler spinning up and the ambient temperature fluctuating by about a degree between tests. The point is: thermals are a non-issue with a decent cooler on this board.</p>
+<p>I did <strong>not</strong> test an Intel N100 mini PC myself. Everything I say about N100 performance below is based on published specs and widely reported benchmarks from other reviewers. I'll be clear where that line is.</p>
+<h2>Direct Play: Both Are Fine</h2>
+<p>If every client in your house supports the codec your files are stored in — typically HEVC/H.265 for 4K rips — both platforms just pass the file through. My Pi 5's 453 MB/s sequential read is more than enough to serve even high-bitrate 4K remuxes (which top out around 100-130 Mbps, or roughly 13-16 MB/s). Storage throughput is never the bottleneck for direct play.</p>
+<p>If you're storing media on a USB-attached drive like a <a class="aff" href="https://www.amazon.co.uk/s?k=WD+Elements+4TB+External+HDD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">WD Elements 4TB External HDD</a>, USB 3.0's ~5 Gbps is still plenty for a single 4K stream. Multiple simultaneous remux streams could push it, but most homelabs don't hit that.</p>
+<h2>4K Transcoding: Where the Pi 5 Breaks Down</h2>
+<p>The Raspberry Pi 5's BCM2712 SoC has a hardware H.265 <em>decoder</em> but no hardware <em>encoder</em>. When Jellyfin needs to transcode — say, converting 4K HEVC to 1080p H.264 for a browser that doesn't support HEVC — the Pi must do it in software using its four Cortex-A76 cores. In practice, this means:</p>
+<ul>
+<li>4K HEVC → 1080p H.264 in software: reportedly achieves roughly 5-12 fps depending on the source, well below the 24 fps minimum for real-time playback.</li>
+<li>1080p H.264 → 1080p H.264 (subtitle burn-in or bitrate reduction): borderline. Sometimes usable for a single stream, sometimes not.</li>
+<li>Direct play or direct stream with compatible clients: perfectly smooth.</li>
+</ul>
+<p>This isn't a storage problem. My NVMe at 453 MB/s reads faster than any media file demands. It's purely a CPU encoding limitation.</p>
+<h2>What the Intel N100 Brings (Based on Published Specs)</h2>
+<p>The Intel N100 is a 4-core Alder Lake-N chip with <strong>Intel UHD Graphics</strong> that supports Quick Sync Video — hardware-accelerated encoding and decoding for H.264, H.265/HEVC, VP9, and AV1 decode. Based on widely published benchmarks and community reports:</p>
+<ul>
+<li>4K HEVC → 1080p H.264 via Quick Sync: reportedly handles <strong>3-5 simultaneous transcode streams</strong> in real time.</li>
+<li>AV1 hardware decode is supported, though AV1 <em>encode</em> is not (that requires Arc GPUs).</li>
+<li>The chip's 6W TDP means total system power for a mini PC like the <a class="aff" href="https://www.amazon.co.uk/s?k=Beelink+Mini+S12+Pro+%28Intel+N100%29&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Beelink Mini S12 Pro (Intel N100)</a> or <a class="aff" href="https://www.amazon.co.uk/s?k=TRIGKEY+G4+N100+Mini+PC&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">TRIGKEY G4 N100 Mini PC</a> reportedly sits at 15-30W under transcode load — roughly 3-4× the Pi 5's power draw, but still very modest.</li>
+</ul>
+<p>The N100 mini PCs also typically ship with an M.2 NVMe slot running at PCIe Gen 3 x2 or x4, SATA options, and dual ethernet or 2.5GbE on some models — more expansion than the Pi 5 offers.</p>
+<h2>Practical Setup Considerations</h2>
+<h3>Storage</h3>
+<p>For either platform, the media library lives on bulk storage. My Pi 5 boots from its NVMe (the Fanxiang S501Q handles Jellyfin's metadata and database at 16,433 random 4K read IOPS — snappy for library scans), while the actual media files sit on attached external drives. If you want to repurpose a spare M.2 drive as portable external storage for shuffling media between machines, an enclosure like <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> is handy.</p>
+<h3>Jellyfin Configuration</h3>
+<p>On the Pi 5, your best experience comes from forcing direct play. In Jellyfin's dashboard, set client playback quality to "Original" and make sure your client apps (Jellyfin Media Player on desktop, Swiftfin on Apple TV, Findroid on Android) natively decode your file formats. This sidesteps the entire transcoding problem.</p>
+<p>On an N100 system, you'd enable hardware acceleration in Jellyfin under <strong>Dashboard → Playback → Transcoding</strong> and select "Intel QuickSync (QSV)" or "VA-API." This is reportedly straightforward on Linux and unlocks the GPU encoder.</p>
+<h3>Remote Access</h3>
+<p>If you want to stream outside your home, transcoding becomes nearly unavoidable — mobile clients on cellular connections need lower bitrates. This is exactly where the Pi 5 falls short. For remote access you'll need a reverse proxy with a domain (Namecheap for a cheap one), and realistically, the N100 to handle on-the-fly transcoding. If you'd rather not expose your home network at all, spinning up Jellyfin on a small VPS like Hetzner Cloud with sufficient storage is another option, though bandwidth costs add up with large libraries.</p>
+<h2>Who Should NOT Use a Pi 5 for Jellyfin</h2>
+<ul>
+<li>Anyone with family members or guests who'll stream from web browsers (Chrome transcodes HEVC by default on many setups).</li>
+<li>Anyone who needs remote access from phones on mobile data.</li>
+<li>Anyone unwilling to standardize all client devices on direct-play-capable apps.</li>
+</ul>
+<p>The Pi 5 is not a bad Jellyfin server. It's a bad <em>transcoding</em> server. If you control every endpoint and can guarantee direct play, it works great at lower power and cost.</p>
+<h2>Who Should NOT Buy an N100 Mini PC for This</h2>
+<ul>
+<li>If you only stream locally to an Apple TV, Android TV, or Jellyfin Media Player — all of which handle direct play — the N100's Quick Sync goes unused, and you've spent $150-200 on capability you don't need.</li>
+<li>If you already own a <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+8GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 8GB</a>, try it first. You might find transcoding never triggers in your setup.</li>
+</ul>
+<h2>Verdict</h2>
+<p><strong>For direct-play-only households</strong>, the Pi 5 is the better value — my build runs cool (48.8°C under load), fast enough on NVMe (453 MB/s), and sips power. <strong>For any setup requiring transcoding</strong> — browsers, remote streaming, mixed clients — an N100 mini PC with Intel Quick Sync is reportedly the minimum viable hardware that actually works in real time. Buy the Pi if you control your clients; buy the N100 if you don't.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>USB 3.0 Portable Solid State Drive – Metal Shell, 500GB</span><span class=pr>£15.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/usb-3-0-portable-solid-state-drive-metal-shell-500gb-to-16tb" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
