@@ -1,0 +1,99 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best Smart PDU or Power Strip with Per-Outlet Monitoring for Small Homelab Rack</title>
+<meta name=description content="Compare top smart PDUs with per-outlet power monitoring sized for small homelab racks, including options from Tripp Lite, CyberPower, and APC with remote management."><link rel="canonical" href="https://homelabbench.com/best-smart-pdu-or-power-strip-with-per-outlet-monitoring-for-small-hom.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-09-16</p><h1>Best Smart PDU or Power Strip with Per-Outlet Monitoring for a Small Homelab Rack</h1>
+<p>For a small homelab rack, the Tripp Lite PDUMH15AT offers genuine per-outlet current metering in a rack-mount form factor, while the APC AP7900B adds per-outlet switching if you need remote reboot capability — both based on published specs, as I haven't tested either unit hands-on. Below, I'll walk through what actually matters when choosing a smart PDU, ground it in my own low-power Pi-based build, and give honest assessments of four commonly recommended options.</p>
+<h2>Why Per-Outlet Monitoring Matters (Even for Small Builds)</h2>
+<p>My primary homelab node is a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 15 GB RAM running Debian 13 (trixie), booting from a <strong>Fanxiang S501Q 512GB NVMe</strong> via PCIe gen 2. The entire system idles around <strong>49.4°C</strong> SoC temperature and stays at <strong>48.8°C</strong> even under sustained fio benchmarks — meaning it barely draws power. But "barely" is the problem: without per-outlet monitoring, I have no idea whether the 5–8 watts I expect is what I'm actually drawing, or whether a misbehaving USB peripheral is spiking consumption.</p>
+<p>Per-outlet monitoring lets you:</p>
+<ul>
+<li><strong>Catch runaway devices</strong> before they trip a breaker or overheat a cheap power strip.</li>
+<li><strong>Right-size your UPS</strong> by measuring real draw instead of guessing from nameplate ratings.</li>
+<li><strong>Trend power consumption</strong> over time, which matters when you're adding drives, switches, or a second node.</li>
+</ul>
+<p>Even with my modest setup — sequential reads of <strong>453 MB/s</strong>, sequential writes of <strong>438 MB/s</strong>, and <strong>16,433 random-read IOPS</strong> at 4K — I want to know exactly what the NVMe drive contributes to total draw versus the Pi itself. A PDU with per-outlet data makes that trivial.</p>
+<h2>The Four Options, Honestly Assessed</h2>
+<h3>Tripp Lite PDUMH15AT — Metered Rack PDU</h3>
+<p>Based on published specs, this is a <strong>1U horizontal</strong> unit with a digital current meter and per-outlet load readings. It handles 15A / 120V circuits, which is more than enough for a homelab that might top out at 3–5A total. Tripp Lite's SNMP card (sold separately) enables network-based monitoring, and the unit itself is passively cooled — no fan noise.</p>
+<p><strong>Trade-off:</strong> It meters but does not <em>switch</em> outlets. You can see what each outlet draws, but you can't remotely power-cycle a hung device. Street price reportedly sits around $300–$400 new. For a rack with a Pi, a small NAS, and a managed switch, that's a significant percentage of total hardware cost.</p>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Tripp+Lite+PDUMH15AT+Metered+PDU&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Tripp Lite PDUMH15AT Metered PDU</a></p>
+<h3>APC AP7900B — Switched Rack PDU</h3>
+<p>Per APC's published data sheet, this unit provides <strong>per-outlet switching and monitoring</strong> over a web interface and SNMP. You get 8 outlets on a standard NEMA 5-15P input, 15A capacity, and the ability to remotely reboot any outlet. APC's firmware reportedly supports outlet groups, scheduled reboots, and threshold alarms.</p>
+<p><strong>Trade-off:</strong> The AP7900B is an older design. APC's web UI is functional but dated, and replacement units on the secondary market can be hit-or-miss on firmware versions. New units are expensive (~$500+); refurbished ones around $150–$250 are common. I have not tested one — these prices and capabilities are based on publicly available specs and marketplace listings.</p>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=APC+AP7900B+Switched+Rack+PDU&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">APC AP7900B Switched Rack PDU</a></p>
+<h3>BN-LINK 8-Outlet Smart Power Strip</h3>
+<p>This is a consumer-grade Wi-Fi power strip with individually controllable outlets. Based on published specs, it uses the Tuya/Smart Life ecosystem, supports basic scheduling, and costs under $30.</p>
+<p><strong>Trade-off:</strong> It does <strong>not</strong> provide per-outlet power monitoring — only on/off switching. There's no current/wattage readout per outlet. It's also not rack-mountable without DIY brackets, and relying on a cloud-connected consumer strip for server infrastructure introduces a dependency that defeats the purpose of self-hosting. I'd skip this one entirely for rack use.</p>
+<h3>Kasa Smart Wi-Fi Power Strip KP303</h3>
+<p>The TP-Link Kasa KP303 has 3 individually controllable outlets and 2 USB ports. Per the spec sheet, it integrates with the Kasa app and supports energy monitoring <strong>per strip, not per outlet</strong> on this model (the KP303 specifically lacks individual outlet metering — the EP25 or HS300 models reportedly do offer it).</p>
+<p><strong>Trade-off:</strong> Three outlets is limiting. No rack ears. Cloud-dependent unless you flash alternative firmware, which voids warranty. At roughly $25, it's fine for a desk setup but poorly suited to a rack.</p>
+<h2>What I Actually Use and Recommend for Low-Power Racks</h2>
+<p>My Pi 5 build draws so little power that I currently run it through a basic surge protector and measure consumption with a Kill-A-Watt inline meter. That works for a single node. When I add a second Pi or a small NAS, the plan is to move to a proper PDU.</p>
+<p>For a rack with 2–6 low-power devices, the honest recommendation based on available specs:</p>
+<ul>
+<li><strong>Budget path (~$150–$200):</strong> A refurbished <strong>APC AP7900B</strong> from a reputable reseller. You get per-outlet switching <em>and</em> monitoring, SNMP, and actual rack ears. Verify the firmware version before buying.</li>
+<li><strong>New/metered-only path (~$300):</strong> The <strong>Tripp Lite PDUMH15AT</strong> if you want new hardware with warranty and don't need remote switching.</li>
+<li><strong>Skip:</strong> Consumer smart strips for anything rack-mounted or running services you depend on.</li>
+</ul>
+<p>If you're managing your homelab headlessly — as I do with my Pi 5, which runs entirely over SSH — being able to remotely power-cycle an outlet on a hung device without walking to the rack is worth the cost of a switched PDU. For headless management, a cheap HDMI capture card like the <a class="aff" href="https://home-lab-bench.myshopify.com/products/ms2131-hdmi-capture-card-1080p-video-audio-for-headless-servers" target="_blank">MS2131 HDMI Capture Card – 1080p Video &amp; Audio for Headless Servers</a> paired with a switched PDU gives you full remote recovery capability, including hard reboot.</p>
+<h2>Keeping Your Rack Clean While You're In There</h2>
+<p>If you're already opening the rack to install a PDU, it's a good time to clean dust out of any fans. Accumulated dust on small fans — especially on a NAS or active-cooled switch — raises thermals and noise. A purpose-built cleaning tool like the <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> makes this less tedious than compressed air, especially in tight rack spaces.</p>
+<h2>Who Should NOT Buy a Smart PDU</h2>
+<ul>
+<li><strong>Single-device setups.</strong> If you're running one Pi and a switch, a $15 Kill-A-Watt meter tells you everything a $300 PDU would, and you can power-cycle by hand in two seconds.</li>
+<li><strong>Renters on strict budgets.</strong> A consumer smart strip with energy monitoring (like the Kasa HS300, reportedly ~$50) is a more rational choice than a rack PDU if you don't have a rack.</li>
+<li><strong>Anyone expecting perfect accuracy.</strong> Even rack PDUs typically have ±1–3% metering tolerance per published specs. For billing-grade accuracy, you need utility-grade equipment.</li>
+</ul>
+<h2>Verdict</h2>
+<p><strong>For a small homelab rack, a refurbished APC AP7900B offers the best balance of per-outlet monitoring, remote switching, and cost — based on published specs and market pricing.</strong> The Tripp Lite PDUMH15AT is the better buy-new option if you only need metering. Skip consumer smart strips for rack-mounted gear; they lack the monitoring granularity and reliability that makes a PDU worth having in the first place.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M3/M4 Metal Screw &amp; Pin Assortment Box – 500 Pieces with Spanners</span><span class=pr>£11.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m3-m4-metal-screw-pin-assortment-box-500-pieces-with-spanners" target="_blank">View →</a></div><div class=prow><span class=nm>JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</span><span class=pr>£9.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">View →</a></div><div class=prow><span class=nm>Mini DisplayPort / Thunderbolt to HDMI Adapter Cable – 4K, 0.2m</span><span class=pr>£5.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/mini-displayport-thunderbolt-to-hdmi-adapter-cable-4k-0-2m" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
