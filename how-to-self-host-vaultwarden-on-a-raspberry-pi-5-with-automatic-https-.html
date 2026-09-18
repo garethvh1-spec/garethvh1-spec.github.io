@@ -1,0 +1,177 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>How to Self-Host Vaultwarden on a Raspberry Pi 5 with Automatic HTTPS and Backups</title>
+<meta name=description content="Learn how to self-host Vaultwarden on a Raspberry Pi 5 with automatic HTTPS via Caddy, scheduled encrypted backups, and step-by-step configuration."><link rel="canonical" href="https://homelabbench.com/how-to-self-host-vaultwarden-on-a-raspberry-pi-5-with-automatic-https-.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-09-18</p><h1>How to Self-Host Vaultwarden on a Raspberry Pi 5 with Automatic HTTPS and Backups</h1>
+<p>Vaultwarden runs comfortably on a Raspberry Pi 5 and gives you a fully functional, self-hosted Bitwarden-compatible password manager in under an hour. This guide covers exactly how I set it up on my own Pi 5 — NVMe boot, Docker, Caddy for automatic HTTPS, and encrypted off-site backups — with the real numbers from my build.</p>
+<h2>My Hardware</h2>
+<ul>
+<li><strong>Board:</strong> Raspberry Pi 5 Model B Rev 1.1 with 15 Gi RAM (the 16 GB SKU) <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+16GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 16GB</a></li>
+<li><strong>NVMe:</strong> Fanxiang S501Q 512 GB, booting directly from <code>/dev/nvme0n1p2</code></li>
+<li><strong>OS:</strong> Debian GNU/Linux 13 (trixie), kernel 6.18.34+rpt-rpi-2712</li>
+<li><strong>PCIe:</strong> Gen 2 (the Pi 5 default)</li>
+</ul>
+<p>Sequential reads land at <strong>453 MB/s</strong> and writes at <strong>438 MB/s</strong>; random 4K reads hit <strong>16,433 IOPS</strong>. For a SQLite-backed password vault that rarely exceeds a few megabytes, this is wildly more than enough. SoC temperature sat at <strong>49.4 °C idle</strong> and actually <em>dropped</em> to <strong>48.8 °C under load</strong> during a sustained fio run — the active cooler on my Pi 5 clearly had headroom to spare.</p>
+<p>If you want to keep your NVMe drive portable for cloning or offline backups, an external enclosure like <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> makes swapping and imaging painless.</p>
+<h2>Prerequisites</h2>
+<p>You need a domain name pointing to your home IP (or a VPS IP). I use a cheap domain from Namecheap. You also need port 443 forwarded on your router to the Pi's local IP, or a reverse tunnel if your ISP uses CGNAT.</p>
+<p>Ensure Docker and Docker Compose are installed:</p>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install -y docker.io docker-compose-v2
+sudo usermod -aG docker $USER
+# Log out and back in
+</code></pre>
+<h2>Step 1: Directory Structure</h2>
+<pre><code class="language-bash">mkdir -p ~/vaultwarden/{data,caddy_data,caddy_config,backups}
+cd ~/vaultwarden
+</code></pre>
+<h2>Step 2: Docker Compose File</h2>
+<p>Create <code>docker-compose.yml</code>:</p>
+<pre><code class="language-yaml">services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: &quot;https://vault.yourdomain.com&quot;
+      SIGNUPS_ALLOWED: &quot;false&quot;
+      ADMIN_TOKEN: &quot;&quot; # set via argon2 hash, see below
+    volumes:
+      - ./data:/data
+    expose:
+      - &quot;80&quot;
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - &quot;443:443&quot;
+      - &quot;80:80&quot;
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+</code></pre>
+<h3>Generate the Admin Token</h3>
+<p>Don't put a plaintext password in the compose file. Generate an Argon2 hash:</p>
+<pre><code class="language-bash">docker run --rm vaultwarden/server /vaultwarden hash --preset owasp
+</code></pre>
+<p>Paste your password when prompted, then put the full <code>$argon2id$...</code> output string into the <code>ADMIN_TOKEN</code> field.</p>
+<h2>Step 3: Caddyfile for Automatic HTTPS</h2>
+<p>Create <code>Caddyfile</code> in the same directory:</p>
+<pre><code>vault.yourdomain.com {
+    reverse_proxy vaultwarden:80
+}
+</code></pre>
+<p>That's it. Caddy handles Let's Encrypt certificate issuance and renewal automatically. No certbot cron jobs, no nginx config.</p>
+<h2>Step 4: Start Everything</h2>
+<pre><code class="language-bash">docker compose up -d
+</code></pre>
+<p>Visit <code>https://vault.yourdomain.com</code> — you should see the Bitwarden web vault. Create your first account, then immediately set <code>SIGNUPS_ALLOWED: "false"</code> (already done in the compose file above) and restart:</p>
+<pre><code class="language-bash">docker compose restart vaultwarden
+</code></pre>
+<p>The admin panel lives at <code>https://vault.yourdomain.com/admin</code>.</p>
+<h2>Step 5: Automatic Encrypted Backups</h2>
+<p>The Vaultwarden SQLite database lives in <code>./data/db.sqlite3</code>. It's small — typically under 10 MB even with hundreds of entries. Back it up nightly.</p>
+<h3>Local Backup Script</h3>
+<p>Create <code>backup.sh</code>:</p>
+<pre><code class="language-bash">#!/bin/bash
+BACKUP_DIR=&quot;/home/$USER/vaultwarden/backups&quot;
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+DB_PATH=&quot;/home/$USER/vaultwarden/data&quot;
+
+# Use sqlite3 .backup for a consistent copy
+sqlite3 &quot;$DB_PATH/db.sqlite3&quot; &quot;.backup '$BACKUP_DIR/db-$TIMESTAMP.sqlite3'&quot;
+
+# Encrypt with age (or gpg)
+age -p -o &quot;$BACKUP_DIR/db-$TIMESTAMP.sqlite3.age&quot; &quot;$BACKUP_DIR/db-$TIMESTAMP.sqlite3&quot;
+rm &quot;$BACKUP_DIR/db-$TIMESTAMP.sqlite3&quot;
+
+# Keep only last 30 backups locally
+ls -t &quot;$BACKUP_DIR&quot;/*.age | tail -n +31 | xargs -r rm
+</code></pre>
+<pre><code class="language-bash">chmod +x backup.sh
+sudo apt install -y age sqlite3
+</code></pre>
+<h3>Cron It</h3>
+<pre><code class="language-bash">crontab -e
+# Add:
+0 3 * * * /home/$USER/vaultwarden/backup.sh
+</code></pre>
+<h3>Off-Site Copy</h3>
+<p>I push the encrypted <code>.age</code> files to a Backblaze B2 B2 bucket using <code>rclone</code>:</p>
+<pre><code class="language-bash">sudo apt install -y rclone
+rclone config  # set up a B2 remote called &quot;b2vault&quot;
+</code></pre>
+<p>Append to <code>backup.sh</code>:</p>
+<pre><code class="language-bash">rclone copy &quot;$BACKUP_DIR&quot; b2vault:your-bucket-name/vaultwarden --max-age 24h
+</code></pre>
+<p>B2's first 10 GB of storage is free — you'll never hit that with password vault backups.</p>
+<p>Alternatively, if you'd rather keep everything on your own infrastructure, a small VPS on Hetzner Cloud running an rsync target works well for a few euros per month.</p>
+<h2>Step 6: Hardening Checklist</h2>
+<ul>
+<li><strong>Disable signups</strong> after creating your account(s).</li>
+<li><strong>Fail2Ban:</strong> Vaultwarden logs failed attempts to <code>/data/vaultwarden.log</code>. A Fail2Ban jail on the Pi watching that log blocks brute-force attempts.</li>
+<li><strong>Firewall:</strong> Only ports 80 and 443 need to be exposed. Use <code>ufw</code> or <code>nftables</code>.</li>
+<li><strong>Updates:</strong> Pin a Vaultwarden image tag in production, but check for releases monthly. <code>docker compose pull &amp;&amp; docker compose up -d</code> is the entire upgrade.</li>
+<li><strong>Separate VLAN:</strong> If your router supports it, isolate the Pi on its own VLAN with only HTTPS egress.</li>
+</ul>
+<h2>Performance Reality Check</h2>
+<p>On my Pi 5, the Vaultwarden container uses roughly <strong>25–40 MB of RAM</strong> and near-zero CPU at rest. Logins and vault syncs from the Bitwarden app are effectively instant — the 16K random-read IOPS from the NVMe are never the bottleneck; the SQLite database is tiny. With 15 Gi of RAM, you can comfortably run Vaultwarden alongside other services (reverse proxy, monitoring, Home Assistant, etc.) without contention.</p>
+<p>Thermals are a non-issue. My SoC sits under 50 °C even under synthetic load. If you're running a fanless passive case, your numbers will be higher — reportedly 65–70 °C under load based on community reports — but still within the Pi 5's thermal throttle threshold of 85 °C. If dust buildup becomes a concern with active cooling, <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> is handy for periodic maintenance.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you don't have a static IP or reliable DDNS</strong>, your vault will become unreachable when your IP changes. Consider a VPS on <a class="aff" href="https://m.do.co/c/28ef2b9c9729" rel="nofollow sponsored" target="_blank">DigitalOcean</a> or Vultr instead — Vaultwarden runs fine on their smallest instances.</li>
+<li><strong>If you can't commit to maintaining backups and updates</strong>, a hosted Bitwarden subscription is $10/year and someone else handles uptime.</li>
+<li><strong>If your household can't tolerate downtime</strong> during power outages or SD card failures — though NVMe boot (as in</li>
+</ul></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</span><span class=pr>£29.00</span><a class=go href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe/NGFF SSD Enclosure – USB-C 10Gbps for Drive Cloning</span><span class=pr>£21.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ngff-ssd-enclosure-usb-c-10gbps-for-drive-cloning" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
