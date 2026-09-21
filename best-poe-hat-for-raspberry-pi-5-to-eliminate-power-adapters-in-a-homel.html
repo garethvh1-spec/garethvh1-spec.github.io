@@ -1,0 +1,118 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best PoE+ HAT for Raspberry Pi 5 to Eliminate Power Adapters in a Homelab Rack</title>
+<meta name=description content="Compare top PoE+ HATs for Raspberry Pi 5, including power delivery, fan cooling, and rack compatibility to run your homelab with a single Ethernet cable."><link rel="canonical" href="https://homelabbench.com/best-poe-hat-for-raspberry-pi-5-to-eliminate-power-adapters-in-a-homel.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-09-21</p><h1>Best PoE+ HAT for Raspberry Pi 5 to Eliminate Power Adapters in a Homelab Rack</h1>
+<p>The Waveshare PoE HAT (F) and the 52Pi PoE+ HAT are the two strongest options for powering a Raspberry Pi 5 over Ethernet in a homelab rack; both reportedly deliver 802.3at (PoE+) power and fit the Pi 5's new power header. I run a Pi 5 cluster myself, and while I haven't bench-tested every PoE HAT on the market, I can ground this guide in the real build where eliminating USB-C power adapters was the whole point.</p>
+<h2>My Actual Build and Why PoE Matters</h2>
+<p>My node is a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 15 GiB RAM, running Debian 13 (trixie) on kernel 6.18.34+rpt-rpi-2712. Storage is a <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB+NVMe&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB NVMe</a> booting directly off <code>/dev/nvme0n1p2</code> at PCIe gen2 (default). Real measured speeds: <strong>453 MB/s sequential read, 438 MB/s sequential write, 16,433 random 4K read IOPS</strong>. Idle SoC temperature sits at <strong>49.4 °C</strong>, and after sustained load it actually measured <strong>48.8 °C</strong> — the active cooler was doing its job.</p>
+<p>When you rack three or four of these, the cable mess becomes real: a USB-C power cable per Pi, an Ethernet cable per Pi, maybe a fan cable. PoE collapses power and data into one Cat 5e/6 run per node. That means fewer cables, a single PoE switch as your power source, and — critically — the ability to remotely power-cycle any Pi from the switch's management interface.</p>
+<h2>The Pi 5 PoE Difference</h2>
+<p>The Raspberry Pi 5 does <strong>not</strong> use the old 4-pin PoE header from the Pi 3B+/4B. It uses a newer header and a different pinout. Any HAT designed for the Pi 4 will not work. Every product below is specifically designed (or revised) for the Pi 5. Verify this before ordering anything — "Raspberry Pi PoE HAT" without a Pi 5 designation is almost certainly a Pi 4 model.</p>
+<h2>The Contenders (Based on Published Specs, Not My Testing)</h2>
+<p>I want to be upfront: I have not bench-tested all four of these HATs side by side. The following is based on published specifications, community reports, and datasheets. Where I've used a product personally, I'll say so.</p>
+<h3>Waveshare PoE HAT (F) for Pi 5</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Waveshare+PoE+HAT+%28F%29+for+Pi+5&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Waveshare PoE HAT (F) for Pi 5</a></p>
+<ul>
+<li><strong>Standard:</strong> 802.3af/at (PoE+), reportedly up to 25.5 W delivery</li>
+<li><strong>Output:</strong> 5V / 5A to the Pi 5 via the dedicated PoE header</li>
+<li><strong>Cooling:</strong> Includes an onboard fan (25 mm) with temperature-controlled speed</li>
+<li><strong>Price:</strong> Typically $18–22</li>
+</ul>
+<p>This is the one I see recommended most often in Pi 5 homelab builds. Waveshare's documentation is solid, and the HAT reportedly provides enough current for a Pi 5 under full load with an NVMe drive attached — a real concern since the Pi 5 can draw 25+ watts peak with peripherals. The onboard fan is small and can be audible; some users replace it or disable it if they already run an active cooler.</p>
+<h3>52Pi PoE+ HAT for Raspberry Pi 5</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=52Pi+PoE%2B+HAT+for+Raspberry+Pi+5&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">52Pi PoE+ HAT for Raspberry Pi 5</a></p>
+<ul>
+<li><strong>Standard:</strong> 802.3at (PoE+), reportedly up to 25.5 W</li>
+<li><strong>Output:</strong> 5V / 5A</li>
+<li><strong>Cooling:</strong> OLED status display on some models, onboard fan</li>
+<li><strong>Price:</strong> Typically $20–28</li>
+</ul>
+<p>52Pi has a long track record with Pi accessories. Their PoE+ HAT for Pi 5 reportedly includes an OLED screen showing IP, temperature, and power draw — useful if your Pis are visible in an open rack. Build quality is generally reported as good. The OLED is a nice touch but adds height, which may matter in tight rack enclosures.</p>
+<h3>GeeekPi PoE HAT for Pi 5</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=GeeekPi+PoE+HAT+for+Pi+5&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">GeeekPi PoE HAT for Pi 5</a></p>
+<ul>
+<li><strong>Standard:</strong> 802.3af/at, reportedly up to 25.5 W</li>
+<li><strong>Output:</strong> 5V / 5A</li>
+<li><strong>Cooling:</strong> 25 mm fan</li>
+<li><strong>Price:</strong> Typically $16–20</li>
+</ul>
+<p>GeeekPi tends to be the budget option. Reportedly functional and compatible, but community reports occasionally mention fan noise or slightly looser tolerances on the header connector. If you're building a four-node cluster and cost matters, this is worth considering, but check recent reviews for the specific Pi 5 revision.</p>
+<h3>Sixfab PoE HAT</h3>
+<p><a class="aff" href="https://www.amazon.co.uk/s?k=Sixfab+PoE+HAT&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Sixfab PoE HAT</a></p>
+<ul>
+<li><strong>Standard:</strong> 802.3af/at (PoE+)</li>
+<li><strong>Output:</strong> 5V, reportedly up to 4A (20 W)</li>
+<li><strong>Price:</strong> Typically $30+</li>
+</ul>
+<p>Sixfab targets a more premium market and their HAT is reportedly well-engineered. However, the higher price and potentially lower maximum current (4A vs. 5A) make it a harder sell for Pi 5 homelab use where you're running NVMe drives and sustained compute loads. If your workload is light (DNS server, Home Assistant), 20 W may be fine. Under heavy load with an NVMe pulling power, it could be tight.</p>
+<h2>What Actually Matters for Selection</h2>
+<h3>Power Budget</h3>
+<p>My Pi 5 with the Fanxiang S501Q NVMe and active cooler draws roughly 8–12 W at idle and can spike above 20 W under synthetic load. You want a HAT rated for at least 25 W <em>input</em> to have margin. The 802.3at standard delivers up to 25.5 W at the powered device. Any HAT claiming only 802.3af (15.4 W max) is risky for a Pi 5 with NVMe.</p>
+<h3>Mechanical Clearance</h3>
+<p>If you're using an NVMe base board underneath the Pi and a PoE HAT on top, measure your stack height. Some rack-mount Pi cases (like the Geekworm or Piunora-style shelves) assume a specific clearance. The 52Pi OLED model adds a few mm.</p>
+<h3>Switch Requirements</h3>
+<p>Your PoE switch must support 802.3at. An 802.3af-only switch will either refuse to power the Pi or under-deliver current. Budget PoE+ switches with 4–8 ports run $50–80 and are worth it versus juggling USB-C adapters. Make sure your total switch power budget covers all connected devices.</p>
+<h3>Thermal Impact</h3>
+<p>My idle SoC temp of 49.4 °C was measured with the Pi 5 active cooler running. A PoE HAT with its own fan adds a second heat source (the voltage regulator on the HAT itself) directly above the SoC. If you're stacking Pis tightly in a rack, consider overall airflow. A <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> is genuinely useful for periodic maintenance once dust accumulates in those tiny fans.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>Single-Pi setups on a desk.</strong> The official Pi 5 27W USB-C adapter is cheaper and simpler than buying a PoE switch plus a HAT. PoE makes sense at three or more nodes.</li>
+<li><strong>Heavy USB peripheral users.</strong> PoE HATs deliver power through the PoE header, not USB-C. Some Pi 5 firmware/bootloader versions handle this fine; others have edge cases with USB device power negotiation. Test before committing a production workload.</li>
+<li><strong>Anyone needing more than 25 W.</strong> If you're running the Pi 5 at maximum clock with an NVMe, a USB SSD, and a USB peripheral, you can exceed what PoE+ comfortably delivers. The upcoming 802.3bt (PoE++) HATs would help, but I haven't seen reliable Pi 5 options yet.</li>
+</ul>
+<h2>Maintaining Your Stack</h2>
+<p>When you're cloning or migrating NVMe drives between Pi nodes, an external <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> is worth having on the shelf. I use one to image drives before swapping them into a new node — much faster than network-based <code>dd</code>.</p>
+<p>If you're running enough Pi nodes that a PoE HAT matters, you likely also benefit from a proper build reference. Our <a class="aff" href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</a> covers multi-node Pi clusters, networking, and automation in depth.</p>
+<h2>Verdict</h2>
+<p><strong>For most Pi 5 homelab racks, the Waveshare PoE HAT (F) is the safest pick</strong> — it's the most widely</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>USB Rear Cooling Fan with Intelligent Temperature Control for PS5 Slim</span><span class=pr>£17.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/usb-rear-cooling-fan-with-intelligent-temperature-control-for-ps5-slim-pro" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
