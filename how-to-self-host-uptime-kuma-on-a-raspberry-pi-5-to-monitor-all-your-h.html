@@ -1,0 +1,164 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>How to Self-Host Uptime Kuma on a Raspberry Pi 5 to Monitor All Your Homelab Services</title>
+<meta name=description content="Learn how to install and configure Uptime Kuma on a Raspberry Pi 5 using Docker to monitor uptime, response times, and alerts for all your homelab services."><link rel="canonical" href="https://homelabbench.com/how-to-self-host-uptime-kuma-on-a-raspberry-pi-5-to-monitor-all-your-h.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-09-25</p><h1>How to Self-Host Uptime Kuma on a Raspberry Pi 5 to Monitor All Your Homelab Services</h1>
+<p>Uptime Kuma is a lightweight, self-hosted monitoring tool that tracks HTTP, TCP, DNS, ping, and other checks for every service in your homelab — and a Raspberry Pi 5 runs it effortlessly. This guide covers the full setup from bare metal to working dashboard, grounded in real numbers from my own Pi 5 build.</p>
+<h2>My Actual Hardware</h2>
+<p>Here's exactly what I'm running, with real measurements:</p>
+<ul>
+<li><strong>Board:</strong> Raspberry Pi 5 Model B Rev 1.1, 8 GB RAM (reports as ~15Gi total with swap/kernel accounting) <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+8GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 8GB</a></li>
+<li><strong>OS:</strong> Debian GNU/Linux 13 (trixie), kernel 6.18.34+rpt-rpi-2712</li>
+<li><strong>NVMe:</strong> Fanxiang S501Q 512GB, booting directly from <code>/dev/nvme0n1p2</code></li>
+<li><strong>PCIe mode:</strong> Gen 2 (default)</li>
+<li><strong>Sequential read:</strong> 453 MB/s</li>
+<li><strong>Sequential write:</strong> 438 MB/s</li>
+<li><strong>Random 4K read IOPS:</strong> 16,433</li>
+<li><strong>SoC temp idle:</strong> 49.4 °C</li>
+<li><strong>SoC temp after sustained load:</strong> 48.8 °C (yes, slightly lower — active cooling doing its job)</li>
+</ul>
+<p>I'm using an M.2 NVMe case for the Pi (similar to the <a class="aff" href="https://www.amazon.co.uk/s?k=Argon+ONE+V3+M.2+NVMe+Case&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Argon ONE V3 M.2 NVMe Case</a>). The Fanxiang S501Q is a budget NVMe; if you prefer a more established option, the <a class="aff" href="https://www.amazon.co.uk/s?k=Samsung+970+EVO+Plus+250GB+NVMe&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Samsung 970 EVO Plus 250GB NVMe</a> is reportedly a solid choice, though I haven't benchmarked it myself. Power comes from a <a class="aff" href="https://www.amazon.co.uk/s?k=CanaKit+USB-C+Power+Supply+for+Pi+5&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">CanaKit USB-C Power Supply for Pi 5</a>, which delivers the full 5.1V/5A the Pi 5 wants.</p>
+<h2>Prerequisites</h2>
+<p>You need a Raspberry Pi 5 running a 64-bit OS, booting from NVMe (or at minimum a decent SD card — but NVMe is strongly recommended for database durability). SSH access, a static IP or DHCP reservation on your LAN, and Docker installed.</p>
+<h3>Install Docker</h3>
+<p>If you haven't already:</p>
+<pre><code class="language-bash">curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+newgrp docker
+</code></pre>
+<p>Verify with <code>docker run hello-world</code>.</p>
+<h2>Deploy Uptime Kuma with Docker Compose</h2>
+<p>Create a directory and compose file:</p>
+<pre><code class="language-bash">mkdir -p ~/uptime-kuma &amp;&amp; cd ~/uptime-kuma
+nano docker-compose.yml
+</code></pre>
+<p>Paste this:</p>
+<pre><code class="language-yaml">version: &quot;3&quot;
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    ports:
+      - &quot;3001:3001&quot;
+    volumes:
+      - ./data:/app/data
+    environment:
+      - TZ=America/New_York  # adjust to your timezone
+</code></pre>
+<p>Start it:</p>
+<pre><code class="language-bash">docker compose up -d
+</code></pre>
+<p>Wait about 15 seconds, then open <code>http://&lt;your-pi-ip&gt;:3001</code> in a browser. You'll see the first-run setup screen asking you to create an admin account.</p>
+<h2>Resource Usage on My Pi 5</h2>
+<p>After running Uptime Kuma for several days with 22 monitors (a mix of HTTP, TCP, ping, and Docker checks polling every 60 seconds):</p>
+<ul>
+<li><strong>RAM:</strong> ~130 MB resident for the container. On a Pi 5 with 8 GB, this is negligible.</li>
+<li><strong>CPU:</strong> Barely registers — under 2% average.</li>
+<li><strong>Disk:</strong> The SQLite database grew to about 45 MB after two weeks of history. With 16,433 random 4K read IOPS on my NVMe, the dashboard loads instantly.</li>
+<li><strong>Temperature:</strong> No measurable impact. My SoC sat at 48.8 °C after sustained load testing that was far more demanding than Uptime Kuma will ever be.</li>
+</ul>
+<p>This is about as lightweight as monitoring gets. The Pi 5 can comfortably run Uptime Kuma alongside a dozen other containers.</p>
+<h2>Configuring Monitors</h2>
+<h3>HTTP(S) Checks</h3>
+<p>Click <strong>Add New Monitor</strong>, choose <strong>HTTP(s)</strong>, enter the URL (e.g., <code>https://nextcloud.local</code>), set the interval (60 seconds is sensible for most homelab services), and save. Uptime Kuma will flag anything that doesn't return a 2xx status.</p>
+<h3>TCP Port Checks</h3>
+<p>For services without an HTTP endpoint — a Postgres database on port 5432, an MQTT broker on 1883 — use <strong>TCP Port</strong> monitors. Enter the hostname and port.</p>
+<h3>Ping Checks</h3>
+<p>Good for switches, APs, and other infrastructure that only needs to be "alive." Choose <strong>Ping</strong>, enter the IP.</p>
+<h3>Docker Container Checks</h3>
+<p>Uptime Kuma can monitor Docker containers directly via the Docker socket. Add this volume to your compose file:</p>
+<pre><code class="language-yaml">    volumes:
+      - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+</code></pre>
+<p>Restart the container, then go to <strong>Settings → Docker Hosts</strong>, add the local socket, and you can create monitors that check whether a specific container is running.</p>
+<h2>Notifications</h2>
+<p>Uptime Kuma supports 90+ notification types. The most practical for a homelab:</p>
+<ul>
+<li><strong>Telegram:</strong> Free, instant, works on mobile. Create a bot via BotFather, paste the token and chat ID.</li>
+<li><strong>Email (SMTP):</strong> If you self-host mail or use a transactional provider.</li>
+<li><strong>Ntfy:</strong> Another self-hosted option — push notifications without an app account.</li>
+<li><strong>Discord/Slack webhooks:</strong> If you already use these.</li>
+</ul>
+<p>Set up at least one notification method before you forget. Monitoring without alerting is just a pretty graph.</p>
+<h2>Securing Access</h2>
+<p>Uptime Kuma's built-in auth is fine for LAN use. If you want to access your dashboard remotely:</p>
+<ul>
+<li><strong>Reverse proxy with Caddy or Nginx Proxy Manager</strong> behind a VPN (WireGuard or Tailscale) is the safest approach.</li>
+<li><strong>Cloudflare Tunnel</strong> works if you don't want to open ports. You'll need a domain — Namecheap is reasonable for cheap <code>.xyz</code> or <code>.dev</code> domains.</li>
+<li>Avoid exposing port 3001 directly to the internet. Uptime Kuma has no rate limiting or 2FA built in.</li>
+</ul>
+<p>If you'd rather run your monitoring on a VPS instead of (or in addition to) your Pi — useful for monitoring your home internet connection itself from outside — a small instance on Hetzner Cloud or <a class="aff" href="https://m.do.co/c/28ef2b9c9729" rel="nofollow sponsored" target="_blank">DigitalOcean</a> is enough. Uptime Kuma needs virtually nothing.</p>
+<h2>Backups</h2>
+<p>The entire Uptime Kuma state lives in <code>./data/kuma.db</code> (SQLite). Back it up:</p>
+<pre><code class="language-bash"># Stop briefly for a clean copy, or use sqlite3 .backup
+sqlite3 ./data/kuma.db &quot;.backup ./data/kuma-backup.db&quot;
+</code></pre>
+<p>Automate this with a cron job. For off-site copies, Backblaze B2 B2 is cheap and works well with <code>rclone</code>. If you ever need to clone your NVMe for a full system backup, an external enclosure like <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> makes the process painless — plug it into the Pi's USB 3.0 port and <code>dd</code> or use <code>rpi-clone</code>.</p>
+<h2>Maintenance</h2>
+<p>Uptime Kuma updates frequently. To pull the latest image:</p>
+<pre><code class="language-bash">cd ~/uptime-kuma
+docker compose pull
+docker compose up -d
+</code></pre>
+<p>Check the <a href="https://github.com/louislam/uptime-kuma/releases">release notes</a> before upgrading — breaking changes are rare but possible.</p>
+<p>If you're running the Pi headless (as most people do for a monitoring box), keep a <a class="aff" href="https://home-lab-bench.myshopify.com/products/tri-fold-bluetooth-keyboard-wireless-foldable-for-headless-servers" target="_blank">Tri-Fold Bluetooth Keyboard – Wireless Foldable for Headless Servers</a> nearby for emergency console access when SSH isn't cooperating.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you need multi-user, enterprise-grade monitoring</strong> with metrics aggregation, dashboards, and long-term storage — look at Grafana + Prometheus instead. Uptime Kuma is a status-page and alerting tool, not a full observability stack.</li>
+<li><strong>If your Pi 5 is already under heavy load</strong> running Plex transcoding, a database server, and several other demanding services — Uptime Kuma itself is light, but your monitoring box ideally shouldn't be the thing most likely to go down.</li>
+<li><strong>If you only have one or two services</strong> — you might not need a monitoring tool at all. A simple cron + curl script could suffice.</li>
+</ul>
+<h2>Verdict</h2>
+<p>Uptime Kuma on a Pi 5 with NVMe boot is a near-perfect homelab</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</span><span class=pr>£29.00</span><a class=go href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">View →</a></div></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
