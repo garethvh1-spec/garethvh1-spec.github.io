@@ -1,0 +1,218 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Raspberry Pi Server Hardening Checklist</title>
+<meta name=description content="The checklist — 18 checks, with the commands."><meta name="robots" content="noindex,follow"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+
+.cap{border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:34px 0;
+ background:linear-gradient(180deg,rgba(0,0,0,.02),transparent)}
+.cap h3{margin:0 0 6px;font-size:1.05rem}
+.cap p{margin:0 0 14px;color:var(--mut);font-size:.92rem;line-height:1.5}
+.cap form{display:flex;gap:8px;flex-wrap:wrap}
+.cap input[type=email]{flex:1 1 240px;min-width:0;padding:10px 12px;font:inherit;
+ border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg)}
+.cap button{padding:10px 18px;font:inherit;font-weight:600;border:0;border-radius:7px;
+ background:var(--acc);color:#fff;cursor:pointer}
+.cap button:hover{opacity:.9}
+.cap .fine{margin:10px 0 0;font-size:.8rem;color:var(--mut)}
+.cap .pts{margin:0 0 14px;padding-left:18px;color:var(--mut);font-size:.9rem;line-height:1.6}
+@media print{.cap,.topbar,.disc,.shopbox{display:none}}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><h1>Raspberry Pi Server Hardening Checklist</h1>
+<p>Eighteen checks, in the order I'd do them on a fresh Pi. Every one of these runs on
+the Pi sitting under my desk right now — it hosts thirteen services and is reachable
+from my phone anywhere in the world. Nothing here is theoretical.</p>
+<p>Work top to bottom. The first five matter far more than the rest.</p>
+<hr />
+<h2>The five that actually matter</h2>
+<h3>1. SSH keys only — kill password login</h3>
+<p>Password auth is the single biggest exposure on a Pi. Bots find port 22 in minutes.</p>
+<p>On your laptop:</p>
+<pre><code>ssh-copy-id gareth@raspberrypi.local
+</code></pre>
+<p>Then on the Pi, edit <code>/etc/ssh/sshd_config</code>:</p>
+<pre><code>PasswordAuthentication no
+PermitRootLogin no
+</code></pre>
+<pre><code>sudo systemctl restart ssh
+</code></pre>
+<p><strong>Test the key login in a second terminal before you close the first one.</strong> If you
+lock yourself out you're plugging in a monitor and keyboard.</p>
+<h3>2. Do not port-forward. Use a mesh VPN</h3>
+<p>This is the one that changes everything. The instinct is to forward port 22 or 8080
+on the router so you can reach the Pi from outside. Don't. That puts your home network
+on the public internet where it gets scanned continuously.</p>
+<p>Install Tailscale instead:</p>
+<pre><code>curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up
+</code></pre>
+<p>Your Pi gets a private address on a mesh only your devices can join. No open ports,
+no dynamic DNS, no fail2ban arms race. Free for personal use.</p>
+<p>Verify nothing is exposed — from your phone on mobile data, try to reach your home IP.
+Nothing should answer.</p>
+<h3>3. Firewall: default deny, explicit allows</h3>
+<pre><code>sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow from 192.168.1.0/24 to any port 22 proto tcp
+sudo ufw allow from 100.64.0.0/10 to any port 22 proto tcp
+sudo ufw enable
+</code></pre>
+<p>Swap <code>192.168.1.0/24</code> for your own LAN range. The <code>100.64.0.0/10</code> line is the
+Tailscale range — it lets you in over the mesh.</p>
+<p>Open service ports the same way, scoped to those two ranges. Never <code>ufw allow 8080</code>
+on its own; that's open to anything that can route to the box.</p>
+<pre><code>sudo ufw status
+</code></pre>
+<p>Every line should name a source range. A rule with no source is a hole.</p>
+<h3>4. Never let a secret touch git</h3>
+<p>API keys belong in <code>.env</code> files that git has never seen.</p>
+<pre><code>chmod 600 ~/myproject/.env
+</code></pre>
+<p>In <code>.gitignore</code>, before the first commit:</p>
+<pre><code>**/.env
+**/*.env
+*.key
+*.pem
+</code></pre>
+<p>Then actually check, because the mistake is usually in a file you forgot about —
+a setup script, a deploy helper, a README example:</p>
+<pre><code>grep -rInE &quot;sk-[A-Za-z0-9]{20}|ghp_|AKIA[0-9A-Z]{16}&quot; --exclude-dir=.git .
+</code></pre>
+<p>I run this on every backup. It has caught a real live API key sitting in a
+deployment script I'd written months earlier and forgotten. Committing it would have
+meant rotating the key and scrubbing history. Two seconds of grep, problem gone.</p>
+<p>If a secret is already pushed, rotate it first and rewrite history second. Assume
+it's compromised the moment it lands on a remote.</p>
+<h3>5. Automatic security updates</h3>
+<pre><code>sudo apt install unattended-upgrades
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+</code></pre>
+<p>A server you patch manually is a server you stop patching by March.</p>
+<hr />
+<h2>Accounts and permissions</h2>
+<h3>6. Delete the default user</h3>
+<p>If a <code>pi</code> user exists, it's a known username on every Pi on earth. Create your own,
+give it sudo, then remove it.</p>
+<pre><code>sudo adduser gareth
+sudo usermod -aG sudo gareth
+sudo deluser --remove-home pi
+</code></pre>
+<h3>7. Run services as a normal user, never root</h3>
+<p>In your systemd unit:</p>
+<pre><code>[Service]
+User=gareth
+WorkingDirectory=/home/gareth/myapp
+</code></pre>
+<p>If a service is compromised, the blast radius is that user's files — not the machine.</p>
+<h3>8. Scope passwordless sudo to exactly one command</h3>
+<p>If something needs to restart services without a password, give it that and nothing
+else. In <code>/etc/sudoers.d/myapp</code>:</p>
+<pre><code>gareth ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart myapp.service
+</code></pre>
+<p>Not <code>NOPASSWD: ALL</code>. Ever. Edit with <code>sudo visudo -f /etc/sudoers.d/myapp</code> so a
+syntax error can't lock you out of sudo entirely.</p>
+<h3>9. Check what can actually log in</h3>
+<pre><code>awk -F: '$3 &gt;= 1000 &amp;&amp; $7 !~ /nologin|false/ {print $1}' /etc/passwd
+</code></pre>
+<p>Anything on that list you don't recognise, investigate.</p>
+<hr />
+<h2>Network surface</h2>
+<h3>10. Know what's listening</h3>
+<pre><code>sudo ss -tlnp
+</code></pre>
+<p>Read every line. Anything bound to <code>0.0.0.0</code> is reachable from your whole LAN.
+Bind to <code>127.0.0.1</code> where you can, and let the firewall cover the rest.</p>
+<h3>11. Turn off what you don't use</h3>
+<p>Bluetooth, Avahi, CUPS and the like ship enabled and most servers never touch them.</p>
+<pre><code>systemctl list-units --type=service --state=running
+sudo systemctl disable --now bluetooth
+</code></pre>
+<h3>12. Static IP by DHCP reservation, not by hand</h3>
+<p>Set the reservation on the router against the Pi's MAC. Hand-configured static IPs
+survive right up until the router hands the same address to a laptop, and then you
+spend an evening on it.</p>
+<h3>13. Check the router itself</h3>
+<p>Default admin password changed. UPnP off — it lets any device on your LAN punch
+holes in your firewall without asking. Remote management off.</p>
+<hr />
+<h2>Data and recovery</h2>
+<h3>14. Backups you have actually restored</h3>
+<p>An untested backup is a guess.</p>
+<pre><code>rsync -a --delete --exclude '.env' --exclude '.venv' ~/myproject/ /mnt/backup/myproject/
+</code></pre>
+<p>Restore one into a temp directory and run it. Put a reminder in the calendar to do
+that once a quarter.</p>
+<h3>15. Boot from SSD, not the SD card</h3>
+<p>SD cards die from write cycles, usually without warning and usually at the worst
+moment. An NVMe HAT or a USB SSD is more reliable by an order of magnitude.</p>
+<h3>16. Watch the temperature</h3>
+<pre><code>vcgencmd measure_temp
+</code></pre>
+<p>Under load it should stay below about 70°C. Past 80°C the Pi throttles and your
+services get slow in ways that are miserable to diagnose. If you're near the limit,
+buy the £8 active cooler.</p>
+<hr />
+<h2>Keep it honest</h2>
+<h3>17. Read the auth log occasionally</h3>
+<pre><code>sudo journalctl -u ssh --since &quot;24 hours ago&quot; | grep -i &quot;failed\|invalid&quot;
+</code></pre>
+<p>With keys-only and no port forwarding this should be almost empty. If it isn't,
+something is reachable that you thought wasn't.</p>
+<h3>18. Write down what's running and why</h3>
+<p>One text file listing each service, what it does, what it talks to, and what breaks
+if it stops. In six months you will not remember, and the day you need it will be
+the day something is broken at 11pm.</p>
+<hr />
+<h2>The short version</h2>
+<p>If you only do three things: <strong>keys not passwords, Tailscale not port-forwarding,
+and <code>grep</code> your repos for secrets before you push.</strong> Those three remove most of the
+realistic ways a home server gets owned.</p>
+<p><em>Gareth — The Homelab Bench. Everything here runs on my own hardware.</em></p></article><p class=mut>Bookmark this page &mdash; it updates as I change things on my own Pi. Print it with Ctrl&nbsp;+&nbsp;P.</p><p><a href="/">&larr; all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
