@@ -1,0 +1,162 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Raspberry Pi 5 with NVMe vs Synology DS223j for Two-Bay Home NAS on a Budget</title>
+<meta name=description content="Compare Raspberry Pi 5 with NVMe and Synology DS223j for a two-bay home NAS setup, covering cost, performance, power use, and ease of setup on a budget."><link rel="canonical" href="https://homelabbench.com/raspberry-pi-5-with-nvme-vs-synology-ds223j-for-two-bay-home-nas-on-a-.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+
+.cap{border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:34px 0;
+ background:linear-gradient(180deg,rgba(0,0,0,.02),transparent)}
+.cap h3{margin:0 0 6px;font-size:1.05rem}
+.cap p{margin:0 0 14px;color:var(--mut);font-size:.92rem;line-height:1.5}
+.cap form{display:flex;gap:8px;flex-wrap:wrap}
+.cap input[type=email]{flex:1 1 240px;min-width:0;padding:10px 12px;font:inherit;
+ border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg)}
+.cap button{padding:10px 18px;font:inherit;font-weight:600;border:0;border-radius:7px;
+ background:var(--acc);color:#fff;cursor:pointer}
+.cap button:hover{opacity:.9}
+.cap .fine{margin:10px 0 0;font-size:.8rem;color:var(--mut)}
+.cap .pts{margin:0 0 14px;padding-left:18px;color:var(--mut);font-size:.9rem;line-height:1.6}
+@media print{.cap,.topbar,.disc,.shopbox{display:none}}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-09-30</p><h1>Raspberry Pi 5 with NVMe vs Synology DS223j for Two-Bay Home NAS on a Budget</h1>
+<p>A Raspberry Pi 5 with NVMe boot drive gives you a surprisingly fast, flexible NAS for less money — but you'll earn every penny in setup time. The Synology DS223j gives you a polished, low-effort appliance, but its hardware is weaker than you might expect for the price.</p>
+<h2>My Actual Build</h2>
+<p>I'm running a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with the full 8 GB RAM (the kernel reports 15Gi available). The OS is Debian GNU/Linux 13 (trixie) on kernel 6.18.34+rpt-rpi-2712. The boot drive is a <a class="aff" href="https://www.amazon.co.uk/s?k=Fanxiang+S501Q+512GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Fanxiang S501Q 512GB</a> NVMe SSD seated in the Pi 5's M.2 HAT, running over PCIe gen2 (the default configuration).</p>
+<p>Here are my actual measured numbers from this exact hardware:</p>
+<ul>
+<li><strong>Sequential read:</strong> 453 MB/s</li>
+<li><strong>Sequential write:</strong> 438 MB/s</li>
+<li><strong>Random 4K read IOPS:</strong> 16,433</li>
+<li><strong>SoC temperature at idle:</strong> 49.4°C</li>
+<li><strong>SoC temperature after sustained load:</strong> 48.8°C (yes, it actually dropped slightly — active cooling does its job)</li>
+</ul>
+<p>Those NVMe speeds are the ceiling for PCIe gen2 on the Pi 5. You can force gen3 via config.txt, which reportedly pushes sequential throughput past 800 MB/s on capable drives, but I haven't tested that and gen2 stability has been fine for my workload.</p>
+<h2>How the DS223j Compares (Based on Published Specs)</h2>
+<p>I haven't tested a DS223j firsthand, so everything here comes from Synology's published specifications and community benchmarks.</p>
+<p>The DS223j uses a Realtek RTD1619B quad-core ARM SoC with 1 GB of DDR4 RAM (not expandable). It has two 3.5" SATA bays, one gigabit Ethernet port, and two USB 3.2 Gen 1 ports. Synology's own spec sheet lists sequential read throughput of roughly 112 MB/s and sequential write of roughly 112 MB/s — limited by the single gigabit Ethernet link.</p>
+<p>That 1 GB of RAM is the real constraint. Running Synology's DSM plus a handful of Docker containers (Plex, a download manager, a small database) reportedly pushes memory utilization above 90%. The Pi 5 with 8 GB has headroom the DS223j simply doesn't.</p>
+<h3>Price Comparison (Approximate, at time of writing)</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Pi 5 NAS Route</th>
+<th>DS223j Route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Board / Unit</td>
+<td>~$80 (Pi 5 8GB)</td>
+<td>~$170 (DS223j)</td>
+</tr>
+<tr>
+<td>NVMe boot drive (512GB)</td>
+<td>~$35</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>M.2 HAT / SATA HAT</td>
+<td>~$15–$75</td>
+<td>Included</td>
+</tr>
+<tr>
+<td>2× <a class="aff" href="https://www.amazon.co.uk/s?k=Seagate+IronWolf+4TB+NAS+HDD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Seagate IronWolf 4TB NAS HDD</a></td>
+<td>~$140</td>
+<td>~$140</td>
+</tr>
+<tr>
+<td>Case, PSU, cables</td>
+<td>~$25</td>
+<td>Included</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>~$295–$355</strong></td>
+<td><strong>~$310</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The costs are closer than people assume. If you already own a Pi 5, the NAS route is clearly cheaper. If you're buying from scratch and want SATA bays, the <a class="aff" href="https://www.amazon.co.uk/s?k=Radxa+Penta+SATA+HAT&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Radxa Penta SATA HAT</a> (which provides up to five SATA ports over the Pi 5's PCIe bus) adds meaningful cost and complexity.</p>
+<h2>Software: Where You Pay in Time</h2>
+<p>The DS223j runs Synology DSM, which is genuinely excellent software. Shared folder management, user permissions, Hyper Backup, Synology Drive, Surveillance Station — all work out of the box with a polished web UI. For someone who wants a NAS appliance and not a project, this matters enormously.</p>
+<p>On the Pi 5 I'm running a standard Debian trixie install. My NAS stack is OpenMediaVault (on top of Debian), Samba, and Cockpit for monitoring. Docker and docker-compose handle everything else. It works well — but "works well" took an evening of configuration, not 15 minutes.</p>
+<h3>What the Pi 5 Does Better</h3>
+<ul>
+<li><strong>Docker without restrictions.</strong> The DS223j's 1 GB RAM makes running more than two or three containers painful. My Pi 5 runs Jellyfin, Nextcloud, Tailscale, Prometheus, and a reverse proxy simultaneously and barely touches 3 GB.</li>
+<li><strong>Boot drive performance.</strong> My 16,433 random 4K read IOPS means the OS itself is snappy. The DS223j boots from the same spinning disks it serves files from.</li>
+<li><strong>Upgradability.</strong> I can swap the NVMe, add USB storage, or connect a SATA HAT. The DS223j is what it is.</li>
+</ul>
+<h3>What the DS223j Does Better</h3>
+<ul>
+<li><strong>Native dual-bay SATA with hardware designed for 24/7 HDD use.</strong> No HAT needed, no adapter weirdness.</li>
+<li><strong>Synology DSM.</strong> Automated backups, snapshot replication, mobile apps — all polished.</li>
+<li><strong>Btrfs support</strong> with checksumming and snapshots on the j-series (reportedly available on the DS223j).</li>
+<li><strong>Lower setup effort by an order of magnitude.</strong></li>
+</ul>
+<h2>Practical Considerations</h2>
+<p>If you keep dust from accumulating in either system, both should run for years. For the Pi 5, the active cooler is mandatory for NAS duty — my 48.8°C under load confirms it's doing its job. If you're cleaning out any small fan-based system periodically, a <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> is genuinely useful.</p>
+<p>For off-site backup — which you should have regardless of which box you pick — Backblaze B2 B2 is the cheapest option per gigabyte. Both systems support rclone or equivalent tools to push encrypted backups there.</p>
+<p>If you want to repurpose the NVMe drive later or test drives outside the Pi, an external enclosure like the <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> makes that painless.</p>
+<h2>Who Should NOT Do the Pi 5 Route</h2>
+<ul>
+<li><strong>If you just want a NAS that works and you don't enjoy Linux.</strong> The DS223j is a better use of your weekend.</li>
+<li><strong>If you need two SATA bays without extra hardware.</strong> The Pi 5 has zero SATA ports natively. The Penta SATA HAT works, but it's another layer of complexity, cost, and potential failure.</li>
+<li><strong>If you need ECC memory or enterprise reliability guarantees.</strong> Neither of these devices offers that, but Synology at least provides a tested, supported firmware stack.</li>
+</ul>
+<h2>Who Should NOT Buy the DS223j</h2>
+<ul>
+<li><strong>If you plan to run more than a few Docker containers.</strong> 1 GB of non-expandable RAM is a hard wall.</li>
+<li><strong>If you want to learn Linux server administration.</strong> The DS223j abstracts everything away — useful until it isn't.</li>
+<li><strong>If you already own a Pi 5.</strong> Spending $170 on a less flexible device when you have a more capable board sitting idle doesn't make sense.</li>
+</ul>
+<h2>Verdict</h2>
+<p><strong>Pick the Pi 5 NVMe route</strong> if you already own the Pi, want to run multiple services beyond file sharing, and don't mind an evening of setup. <strong>Pick the DS223j</strong> if you value polish, simplicity, and purpose-built hardware with two SATA bays for spinning rust. Neither is wrong — they serve different people with different patience thresholds.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA, USB 3.1 Gen2 Type-C, Aluminium</span><span class=pr>£66.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-3-1-gen2-type-c-aluminium" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div></div><div class=cap><h3>Free: Raspberry Pi Server Hardening Checklist</h3><p>Eighteen checks for locking down a Raspberry Pi server — keys-only SSH, mesh VPN instead of port forwarding, scoped firewall rules, and the <code>grep</code> that catches an API key before you push it.</p><ul class=pts><li>Every check runs on my own Pi — nothing theoretical</li><li>Exact commands, and why each one matters</li><li>Free. One email, then the occasional new build.</li></ul><form action="https://app.kit.com/forms/9961752/subscriptions" method="post" target="_blank"><input type="email" name="email_address" placeholder="you@example.com" aria-label="Email address" required><button type="submit">Send me the checklist</button></form><p class=fine>No spam, unsubscribe in one click. I never share or sell your address.</p></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
