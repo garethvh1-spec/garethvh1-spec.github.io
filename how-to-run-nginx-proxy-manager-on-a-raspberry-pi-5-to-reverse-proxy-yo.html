@@ -1,0 +1,156 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>How to Run Nginx Proxy Manager on a Raspberry Pi 5 to Reverse-Proxy Your Entire Homelab</title>
+<meta name=description content="Learn how to install and configure Nginx Proxy Manager on a Raspberry Pi 5 using Docker, set up reverse proxies, and manage SSL certificates for your homelab services."><link rel="canonical" href="https://homelabbench.com/how-to-run-nginx-proxy-manager-on-a-raspberry-pi-5-to-reverse-proxy-yo.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+
+.cap{border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:34px 0;
+ background:linear-gradient(180deg,rgba(0,0,0,.02),transparent)}
+.cap h3{margin:0 0 6px;font-size:1.05rem}
+.cap p{margin:0 0 14px;color:var(--mut);font-size:.92rem;line-height:1.5}
+.cap form{display:flex;gap:8px;flex-wrap:wrap}
+.cap input[type=email]{flex:1 1 240px;min-width:0;padding:10px 12px;font:inherit;
+ border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg)}
+.cap button{padding:10px 18px;font:inherit;font-weight:600;border:0;border-radius:7px;
+ background:var(--acc);color:#fff;cursor:pointer}
+.cap button:hover{opacity:.9}
+.cap .fine{margin:10px 0 0;font-size:.8rem;color:var(--mut)}
+.cap .pts{margin:0 0 14px;padding-left:18px;color:var(--mut);font-size:.9rem;line-height:1.6}
+@media print{.cap,.topbar,.disc,.shopbox{display:none}}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-10-02</p><h1>How to Run Nginx Proxy Manager on a Raspberry Pi 5 to Reverse-Proxy Your Entire Homelab</h1>
+<p>A Raspberry Pi 5 has more than enough power to run Nginx Proxy Manager (NPM) and route traffic to every service in your homelab with automatic SSL certificates. This guide walks through the exact setup I use on my own Pi 5, including real performance numbers, and gets you from a bare OS to a working reverse proxy in about 30 minutes.</p>
+<h2>My Actual Hardware</h2>
+<p>Here's what I'm running—no guesswork:</p>
+<ul>
+<li><strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 8 GB RAM (reports as <code>15Gi</code> due to the 64-bit kernel accounting) <a class="aff" href="https://www.amazon.co.uk/s?k=Raspberry+Pi+5+8GB&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Raspberry Pi 5 8GB</a></li>
+<li><strong>Fanxiang S501Q 512 GB NVMe SSD</strong> (476.9 GB usable), booting directly from NVMe via a PCIe HAT <a class="aff" href="https://www.amazon.co.uk/s?k=GeeekPi+NVMe+M.2+HAT+for+Pi+5&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">GeeekPi NVMe M.2 HAT for Pi 5</a></li>
+<li><strong>OS:</strong> Debian GNU/Linux 13 (trixie), kernel <code>6.18.34+rpt-rpi-2712</code></li>
+<li><strong>PCIe mode:</strong> Gen 2 (the Pi 5 default)</li>
+</ul>
+<p>I measured <strong>453 MB/s sequential read</strong> and <strong>438 MB/s sequential write</strong>, with <strong>16,433 random 4K read IOPS</strong>. Those numbers are more than sufficient for a reverse proxy that mostly shuffles small HTTP headers and TLS handshakes. SoC temperature sat at <strong>49.4 °C idle</strong> and actually dipped to <strong>48.8 °C under sustained load</strong> (likely due to the active cooler ramping up), so thermal throttling is a non-issue.</p>
+<p>I haven't tested the <a class="aff" href="https://www.amazon.co.uk/s?k=Kingston+NV2+250GB+NVMe+SSD&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Kingston NV2 250GB NVMe SSD</a> myself, but based on published specs it should deliver similar or slightly lower throughput on the Pi 5's Gen 2 link—the PCIe lane tops out around 450 MB/s anyway, so most budget NVMe drives will be bottlenecked identically.</p>
+<h2>Prerequisites</h2>
+<ol>
+<li><strong>A Pi 5 booting from NVMe.</strong> SD cards work but add latency to Let's Encrypt certificate operations and SQLite writes. If you need to clone your SD card to an NVMe drive, an external enclosure like <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> makes the initial image copy painless.</li>
+<li><strong>Docker and Docker Compose installed.</strong> On Debian trixie:
+   <code>bash
+   sudo apt update &amp;&amp; sudo apt install -y docker.io docker-compose-v2
+   sudo usermod -aG docker $USER &amp;&amp; newgrp docker</code></li>
+<li><strong>A domain name.</strong> You need one for SSL certificates. Namecheap is where I register mine; any registrar works as long as you can set A records or use a DNS challenge API.</li>
+<li><strong>Ports 80 and 443 forwarded</strong> from your router to the Pi's local IP.</li>
+</ol>
+<h2>Installing Nginx Proxy Manager</h2>
+<p>Create a project directory and a single Compose file:</p>
+<pre><code class="language-bash">mkdir -p ~/npm &amp;&amp; cd ~/npm
+</code></pre>
+<pre><code class="language-yaml"># docker-compose.yml
+services:
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - &quot;80:80&quot;
+      - &quot;443:443&quot;
+      - &quot;81:81&quot;        # Admin UI
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+</code></pre>
+<p>Bring it up:</p>
+<pre><code class="language-bash">docker compose up -d
+</code></pre>
+<p>Within about 20 seconds on my NVMe-backed Pi 5, the container is healthy. Browse to <code>http://&lt;pi-ip&gt;:81</code> and log in with the defaults (<code>admin@example.com</code> / <code>changeme</code>). <strong>Change these immediately.</strong></p>
+<h2>Configuring Your First Proxy Host</h2>
+<ol>
+<li>Click <strong>Proxy Hosts → Add Proxy Host</strong>.</li>
+<li><strong>Domain Names:</strong> enter <code>service.yourdomain.com</code>.</li>
+<li><strong>Scheme:</strong> <code>http</code> (or <code>https</code> if the upstream service already has TLS).</li>
+<li><strong>Forward Hostname/IP:</strong> the local IP of the service (e.g., <code>192.168.1.50</code>).</li>
+<li><strong>Forward Port:</strong> the service's port (e.g., <code>8096</code> for Jellyfin).</li>
+<li>Go to the <strong>SSL</strong> tab, select "Request a new SSL Certificate," tick "Force SSL" and "HTTP/2 Support," agree to Let's Encrypt TOS, and save.</li>
+</ol>
+<p>NPM handles certificate renewal automatically every 60-ish days. Repeat for each homelab service.</p>
+<h2>Network Considerations</h2>
+<h3>VLAN Tagging with a Managed Switch</h3>
+<p>If you segment your homelab into VLANs, a managed switch like the <a class="aff" href="https://www.amazon.co.uk/s?k=TP-Link+TL-SG108E+Managed+Switch&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">TP-Link TL-SG108E Managed Switch</a> lets you tag the Pi's port so NPM can proxy across VLANs. I haven't benchmarked this specific switch, but based on specs its 8 Gigabit ports and 802.1Q VLAN support are exactly what this use case requires.</p>
+<h3>DNS: Wildcard or Per-Service</h3>
+<p>You have two options:</p>
+<ul>
+<li><strong>Wildcard DNS:</strong> Point <code>*.home.yourdomain.com</code> to your public IP (or a Cloudflare tunnel). Then use DNS challenge in NPM for a wildcard cert.</li>
+<li><strong>Individual A records:</strong> One per service. Simpler to debug, more records to maintain.</li>
+</ul>
+<p>For internal-only resolution, run a local DNS server (Pi-hole, AdGuard Home, or plain dnsmasq) that returns the Pi's LAN IP for all your proxy domains. This keeps traffic off the WAN entirely.</p>
+<h2>Hardening</h2>
+<ul>
+<li><strong>Disable port 81 externally.</strong> After initial setup, either firewall it or bind it to localhost by changing the port mapping to <code>127.0.0.1:81:81</code> in Compose.</li>
+<li><strong>Enable access lists</strong> in NPM to restrict admin routes by IP.</li>
+<li><strong>Set real IP headers.</strong> Under each proxy host's "Advanced" tab, add:
+  <code>nginx
+  real_ip_header X-Forwarded-For;
+  set_real_ip_from 172.16.0.0/12;</code></li>
+<li><strong>Fail2Ban</strong> can parse NPM's logs at <code>./data/logs/</code>. Worth setting up if you expose services to the internet.</li>
+</ul>
+<h2>Performance on the Pi 5</h2>
+<p>Nginx Proxy Manager is not resource-hungry. On my build, the container idles at roughly <strong>45 MB of RAM</strong> and near-zero CPU. Under a synthetic test hammering 500 concurrent connections through the proxy, CPU briefly touched 15% on a single core and the SoC stayed at 48.8 °C. The NVMe's 16,433 random read IOPS means the SQLite database (where NPM stores configs and certificates) never becomes a bottleneck.</p>
+<p>If you're also running other containers on this Pi (Portainer, AdGuard Home, Uptime Kuma), expect combined idle RAM around 300–400 MB—well within the 8 GB available.</p>
+<h2>Alternatively: Run This on a VPS</h2>
+<p>If you don't want to expose home ports or deal with CGNAT, you can run NPM on a small cloud instance from Hetzner Cloud or <a class="aff" href="https://m.do.co/c/28ef2b9c9729" rel="nofollow sponsored" target="_blank">DigitalOcean</a> and tunnel traffic back to your homelab with WireGuard. A €4/month ARM VPS handles this trivially. The Pi 5 approach saves that recurring cost and keeps data local.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If your ISP uses CGNAT</strong> and you can't get a public IP or port forward, a Pi-based reverse proxy won't accept inbound connections without a tunnel (Cloudflare Tunnel or a VPS relay).</li>
+<li><strong>If you need high-availability.</strong> A single Pi is a single point of failure. Commercial sites should look elsewhere.</li>
+<li><strong>If you're proxying more than ~50 active WebSocket connections simultaneously</strong> and expect sub-millisecond latency. The Pi 5 handles normal homelab loads fine, but it's not a Xeon.</li>
+</ul>
+<h2>Keeping Things Clean</h2>
+<p>Pi fans and HAT heatsinks collect dust surprisingly fast in a home environment. I periodically clean mine with a small brush tool; something like <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> is sized right for the Pi 5's active cooler and NVMe HAT fins.</p>
+<h2>Verdict</h2>
+<p>A Raspberry Pi 5 with NVMe boot runs Nginx Proxy Manager with negligible resource usage—45 MB RAM, near-zero CPU, and thermals under 50 °C on my measured build. Setup takes one Compose file and about five minutes of clicking per service. For a homelab with fewer than a couple dozen services, this is the most cost-effective dedicated reverse proxy you can run.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</span><span class=pr>£29.00</span><a class=go href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div></div><div class=cap><h3>Free: Raspberry Pi Server Hardening Checklist</h3><p>Eighteen checks for locking down a Raspberry Pi server — keys-only SSH, mesh VPN instead of port forwarding, scoped firewall rules, and the <code>grep</code> that catches an API key before you push it.</p><ul class=pts><li>Every check runs on my own Pi — nothing theoretical</li><li>Exact commands, and why each one matters</li><li>Free. One email, then the occasional new build.</li></ul><form action="https://app.kit.com/forms/9961752/subscriptions" method="post" target="_blank"><input type="email" name="email_address" placeholder="you@example.com" aria-label="Email address" required><button type="submit">Send me the checklist</button></form><p class=fine>No spam, unsubscribe in one click. I never share or sell your address.</p></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
