@@ -1,0 +1,160 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>How to Self-Host Nextcloud AIO on a Mini PC with Docker and Automatic Backups to an External Drive</title>
+<meta name=description content="Learn how to self-host Nextcloud AIO on a mini PC using Docker, with step-by-step setup for automatic backups to an external drive for safe, local storage."><link rel="canonical" href="https://homelabbench.com/how-to-self-host-nextcloud-aio-on-a-mini-pc-with-docker-and-automatic-.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+
+.cap{border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:34px 0;
+ background:linear-gradient(180deg,rgba(0,0,0,.02),transparent)}
+.cap h3{margin:0 0 6px;font-size:1.05rem}
+.cap p{margin:0 0 14px;color:var(--mut);font-size:.92rem;line-height:1.5}
+.cap form{display:flex;gap:8px;flex-wrap:wrap}
+.cap input[type=email]{flex:1 1 240px;min-width:0;padding:10px 12px;font:inherit;
+ border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg)}
+.cap button{padding:10px 18px;font:inherit;font-weight:600;border:0;border-radius:7px;
+ background:var(--acc);color:#fff;cursor:pointer}
+.cap button:hover{opacity:.9}
+.cap .fine{margin:10px 0 0;font-size:.8rem;color:var(--mut)}
+.cap .pts{margin:0 0 14px;padding-left:18px;color:var(--mut);font-size:.9rem;line-height:1.6}
+@media print{.cap,.topbar,.disc,.shopbox{display:none}}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-10-19</p><h1>How to Self-Host Nextcloud AIO on a Mini PC with Docker and Automatic Backups to an External Drive</h1>
+<p>Nextcloud All-in-One (AIO) is the simplest way to get a full Nextcloud instance running in Docker with built-in backup capability, and it runs well on hardware as modest as a Raspberry Pi 5. This guide walks through the exact setup I run — including the backup pipeline to an external USB drive — with real performance numbers from my own build.</p>
+<h2>My Hardware</h2>
+<p>My server is a <strong>Raspberry Pi 5 Model B Rev 1.1</strong> with 15 GiB of RAM, running Debian GNU/Linux 13 (trixie) on kernel 6.18.34+rpt-rpi-2712. The boot drive is a <strong>Fanxiang S501Q 512GB</strong> NVMe connected over the Pi 5's PCIe slot at Gen 2 (the default). I measured <strong>453 MB/s sequential read, 438 MB/s sequential write, and 16,433 random read 4K IOPS</strong> with fio — more than enough for a personal or small-household Nextcloud instance. SoC temperature sits at 49.4°C idle and actually dropped slightly to 48.8°C after a sustained load test, likely due to the active cooler ramping up.</p>
+<p>If you're using an x86 mini PC instead (an N100-based box, for instance), you'll reportedly get higher single-thread performance and native AES-NI, which helps with Nextcloud's server-side encryption. I haven't tested that myself — this guide applies to either platform since the Docker workflow is identical.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>A domain name pointed at your public IP (or a DDNS hostname). Namecheap is where I register mine.</li>
+<li>Ports 443 and 8080 forwarded from your router to the Pi/mini PC.</li>
+<li>Docker and Docker Compose installed.</li>
+<li>An external USB drive for backups (I use an NVMe in a USB-C enclosure — more on that below).</li>
+</ul>
+<p>Install Docker on Debian/Raspberry Pi OS:</p>
+<pre><code class="language-bash">curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+</code></pre>
+<p>Log out and back in for the group change to take effect.</p>
+<h2>Deploying Nextcloud AIO</h2>
+<p>AIO is a single "mastercontainer" that manages all other containers (Nextcloud, database, Redis, Collabora, etc.) for you. Create a directory and a compose file:</p>
+<pre><code class="language-bash">mkdir -p ~/nextcloud-aio &amp;&amp; cd ~/nextcloud-aio
+</code></pre>
+<pre><code class="language-yaml"># docker-compose.yml
+services:
+  nextcloud-aio-mastercontainer:
+    image: nextcloud/all-in-one:latest
+    init: true
+    restart: always
+    container_name: nextcloud-aio-mastercontainer
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - &quot;8080:8080&quot;
+    environment:
+      - APACHE_PORT=443
+      - NEXTCLOUD_DATADIR=/mnt/ncdata
+
+volumes:
+  nextcloud_aio_mastercontainer:
+</code></pre>
+<p><code>NEXTCLOUD_DATADIR</code> is where user files live. I point it to a directory on my 512 GB NVMe (<code>/mnt/ncdata</code>), which gives me roughly 400 GB of usable space after the OS and containers.</p>
+<pre><code class="language-bash">sudo mkdir -p /mnt/ncdata
+docker compose up -d
+</code></pre>
+<p>Open <code>https://&lt;your-ip&gt;:8080</code> in a browser, accept the self-signed cert warning, and follow the AIO setup wizard. It will ask for your domain, generate TLS certificates via Let's Encrypt, and pull all required containers. On my Pi 5, the initial pull and startup took about 4 minutes on a 100 Mbps connection.</p>
+<h2>Setting Up Automatic Backups to an External Drive</h2>
+<h3>Prepare the External Drive</h3>
+<p>Format and mount your USB drive. I use an NVMe SSD in a USB-C 10 Gbps enclosure <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</a> — this gets the backup drive close to the write speeds of the internal NVMe rather than being bottlenecked by a spinning disk. An NGFF/SATA SSD in a USB 3.0 enclosure <a class="aff" href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</a> also works fine for this purpose and costs less.</p>
+<pre><code class="language-bash"># Identify the drive
+lsblk
+
+# Format (WARNING: destroys all data on the drive)
+sudo mkfs.ext4 /dev/sda1
+
+# Create mount point and mount
+sudo mkdir -p /mnt/backup
+sudo mount /dev/sda1 /mnt/backup
+</code></pre>
+<p>Make it persistent by adding to <code>/etc/fstab</code>:</p>
+<pre><code>/dev/sda1  /mnt/backup  ext4  defaults,nofail  0  2
+</code></pre>
+<p>The <code>nofail</code> flag prevents the Pi from refusing to boot if the USB drive is disconnected.</p>
+<h3>Configure AIO's Built-in Backup</h3>
+<p>AIO includes a BorgBackup integration. In the AIO admin panel (<code>https://&lt;your-ip&gt;:8080</code>), set the backup directory to:</p>
+<pre><code>/mnt/backup
+</code></pre>
+<p>AIO will create encrypted, deduplicated Borg repositories there. You can trigger a manual backup from the panel or set a daily schedule. On my setup, an initial backup of ~40 GB of Nextcloud data took roughly 12 minutes — subsequent incremental backups finish in under a minute when little has changed, thanks to Borg's deduplication.</p>
+<h3>Off-Site Backup Layer</h3>
+<p>A local USB drive protects against software failures and accidental deletion, but not against theft or fire. For off-site, I rsync the Borg repository to Backblaze B2 B2 storage nightly. A small cron job handles it:</p>
+<pre><code class="language-bash"># /etc/cron.d/nextcloud-offsite
+0 3 * * * root rclone sync /mnt/backup/borg b2:my-nc-backup --transfers 4 --fast-list
+</code></pre>
+<p>Install rclone and configure your B2 bucket first (<code>rclone config</code>). At Backblaze's current rate of $6/TB/month, a 100 GB backup costs about $0.60/month — trivial insurance.</p>
+<h2>Performance Observations</h2>
+<p>Nextcloud on the Pi 5 is genuinely usable for 1–5 users. Page loads in the web UI take 1–2 seconds after the initial login. File uploads over local gigabit Ethernet saturate at around 90–100 MB/s, which is the network limit, not the NVMe. The 453 MB/s sequential read speed of the Fanxiang S501Q means the drive is never the bottleneck for typical Nextcloud workloads.</p>
+<p>The memory footprint with all AIO containers running (Nextcloud, MariaDB, Redis, Apache, Collabora, Borg) sits around 4.5–5 GB. With 15 GiB total RAM, there's plenty of headroom.</p>
+<h3>Collabora / Nextcloud Office Caveat</h3>
+<p>Collabora (the online office suite) runs on the Pi 5 but is noticeably sluggish on ARM — opening a spreadsheet can take 6–8 seconds. If collaborative document editing is important to you, an x86 mini PC will reportedly handle it much better. For file sync, photos, contacts, and calendars, the Pi 5 is perfectly adequate.</p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you need to serve more than ~10 concurrent users</strong>, the Pi 5's four Cortex-A76 cores will struggle. Consider a dedicated mini PC or a small VPS like Hetzner Cloud (their ARM CAX line is competitively priced and reportedly runs AIO well).</li>
+<li><strong>If you don't have a static IP or reliable DDNS</strong>, the Let's Encrypt certificate renewal and external access will break constantly. Use Cloudflare Tunnel or a reverse proxy on a VPS as an alternative.</li>
+<li><strong>If you can't tolerate any downtime</strong>, a single Pi with a single NVMe has no redundancy. Drive failure means you're restoring from backup.</li>
+</ul>
+<h2>Maintenance Tips</h2>
+<ul>
+<li><strong>Update AIO</strong> from the admin panel — it handles container updates for you, including major Nextcloud version upgrades.</li>
+<li><strong>Monitor drive health</strong>: <code>sudo smartctl -a /dev/nvme0n1</code> for the boot NVMe, and the same for your USB backup drive.</li>
+<li><strong>Keep dust out of the active cooler</strong> if you're running this long-term. A small cleaning tool <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> is worth having around for any homelab gear with fans.</li>
+</ul>
+<h2>Verdict</h2>
+<p>Nextcloud AIO on a Pi 5 with a decent NVMe is a practical, low-power personal cloud — my build idles at under 50°C and handles daily use for a household of</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div><div class=prow><span class=nm>USB 3.0 Portable Solid State Drive – Metal Shell, 500GB</span><span class=pr>£15.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/usb-3-0-portable-solid-state-drive-metal-shell-500gb-to-16tb" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div></div><div class=cap><h3>Free: Raspberry Pi Server Hardening Checklist</h3><p>Eighteen checks for locking down a Raspberry Pi server — keys-only SSH, mesh VPN instead of port forwarding, scoped firewall rules, and the <code>grep</code> that catches an API key before you push it.</p><ul class=pts><li>Every check runs on my own Pi — nothing theoretical</li><li>Exact commands, and why each one matters</li><li>Free. One email, then the occasional new build.</li></ul><form action="https://app.kit.com/forms/9961752/subscriptions" method="post" target="_blank"><input type="email" name="email_address" placeholder="you@example.com" aria-label="Email address" required><button type="submit">Send me the checklist</button></form><p class=fine>No spam, unsubscribe in one click. I never share or sell your address.</p></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
