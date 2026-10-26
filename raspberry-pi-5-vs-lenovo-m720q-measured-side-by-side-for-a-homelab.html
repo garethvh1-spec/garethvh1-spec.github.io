@@ -1,0 +1,172 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Raspberry Pi 5 vs Lenovo M720q: Measured Side by Side for a Homelab</title>
+<meta name=description content="Raspberry Pi 5 and Lenovo M720q benchmarked side by side with fio disk and 7-Zip CPU tests. Real numbers for sequential/random I/O and single/multi-thread performance in a homelab rack."><link rel="canonical" href="https://homelabbench.com/raspberry-pi-5-vs-lenovo-m720q-measured-side-by-side-for-a-homelab.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+
+.cap{border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:34px 0;
+ background:linear-gradient(180deg,rgba(0,0,0,.02),transparent)}
+.cap h3{margin:0 0 6px;font-size:1.05rem}
+.cap p{margin:0 0 14px;color:var(--mut);font-size:.92rem;line-height:1.5}
+.cap form{display:flex;gap:8px;flex-wrap:wrap}
+.cap input[type=email]{flex:1 1 240px;min-width:0;padding:10px 12px;font:inherit;
+ border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg)}
+.cap button{padding:10px 18px;font:inherit;font-weight:600;border:0;border-radius:7px;
+ background:var(--acc);color:#fff;cursor:pointer}
+.cap button:hover{opacity:.9}
+.cap .fine{margin:10px 0 0;font-size:.8rem;color:var(--mut)}
+.cap .pts{margin:0 0 14px;padding-left:18px;color:var(--mut);font-size:.9rem;line-height:1.6}
+@media print{.cap,.topbar,.disc,.shopbox{display:none}}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-10-26</p><h1>Raspberry Pi 5 vs Lenovo M720q: Measured Side by Side for a Homelab</h1>
+<p>The Pi 5 is a genuine server; the M720q is a genuine step up. I run both in the same 10-inch rack, tested them with the same benchmarks, and have real numbers for where each one wins and where it doesn't matter.</p>
+<h2>What I'm actually running</h2>
+<p>My rack is a 10-inch 6U Lab Rax system holding a UniFi Cloud Gateway Fiber, a UniFi USW Flex 2.5G 8 PoE switch, a UniFi U5G for 5G backup internet, a Lenovo M720q in a 3D-printed rack mount, and Raspberry Pis in a 3D-printed three-Pi mount. A UniFi U7 Pro XG access point is powered by PoE from the same switch.</p>
+<p>The <strong>Raspberry Pi 5 Model B Rev 1.1</strong> (16 GB RAM) runs Raspberry Pi OS on Debian 13 (trixie), booting from a Fanxiang S501Q 512 GB NVMe via the M.2 HAT+ at PCIe Gen 2. It draws power exclusively from PoE — no wall PSU at all. It handles 13 always-on services: trading bots, a content pipeline, monitoring, and a dashboard.</p>
+<p>The <strong>Lenovo ThinkCentre M720q Tiny</strong> (<a class="aff" href="https://www.amazon.co.uk/s?k=Lenovo+ThinkCentre+M720q+Tiny&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Lenovo ThinkCentre M720q Tiny</a>, bought refurbished) runs Proxmox VE 9.2 on Debian 13, booting from a Samsung PM9A1 1 TB NVMe. It has 32 GB RAM, with one empty 2.5-inch SATA bay and an optional PCIe x8 riser slot. Right now it hosts an LXC Samba file server, an LXC Syncthing phone-photo backup (16 GB, 4,181 files), and a nightly pull-backup of the Pi that I've restore-tested.</p>
+<p>I paid <strong>£345 for the M720q</strong> in October 2026, refurbished, including the 32 GB RAM and 1 TB NVMe. I didn't record what the Pi build cost, so I can't give you a fair cost comparison — price a Pi 5 with NVMe HAT, storage, PoE HAT, and a case on the day if that matters to you.</p>
+<h2>The benchmarks — same tests, same day</h2>
+<p>All disk tests were run with fio (1 MB sequential and 4K random at queue depth 32, direct I/O, 15 seconds each). CPU tests used the 7-Zip built-in benchmark.</p>
+<h3>Disk</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Pi 5 (Fanxiang S501Q, Gen 2)</th>
+<th>M720q (Samsung PM9A1)</th>
+<th>Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential read</td>
+<td>452 MB/s</td>
+<td>3,424 MB/s</td>
+<td>7.6×</td>
+</tr>
+<tr>
+<td>Sequential write</td>
+<td>431 MB/s</td>
+<td>3,242 MB/s</td>
+<td>7.5×</td>
+</tr>
+<tr>
+<td>Random read 4K QD32</td>
+<td>104,978 IOPS</td>
+<td>158,595 IOPS</td>
+<td>1.5×</td>
+</tr>
+</tbody>
+</table>
+<p>The sequential gap is enormous — 7.6× — and it's mostly the PCIe link. The Pi 5's M.2 HAT+ runs at Gen 2 by default, which caps the bus around 500 MB/s. The M720q's PM9A1 is on a full Gen 3 ×4 link. On random 4K reads the gap tightens to 1.5×, because random I/O bottlenecks on the drive's controller more than the bus width.</p>
+<p>If you're running a file server, doing VM image moves, or restoring backups, the M720q's sequential throughput makes a tangible difference. For lightweight container workloads that mostly do small random I/O, the Pi's 105K IOPS is genuinely fine.</p>
+<h3>CPU</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Pi 5 (4× A76)</th>
+<th>M720q (i5-9400T, 6 cores)</th>
+<th>Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single-thread 7-Zip</td>
+<td>4,463 MIPS</td>
+<td>5,473 MIPS</td>
+<td>1.2×</td>
+</tr>
+<tr>
+<td>All-threads 7-Zip</td>
+<td>16,011 MIPS</td>
+<td>29,506 MIPS</td>
+<td>1.8×</td>
+</tr>
+</tbody>
+</table>
+<p>Single-thread, the i5-9400T leads by only about 22%. The Pi 5's Cortex-A76 cores are surprisingly competitive clock-for-clock. The real gap is multi-thread: six cores versus four gives the M720q an 84% lead. If you're running Proxmox with multiple VMs and containers doing actual work simultaneously, that headroom matters. For a single-purpose Pi running a handful of lightweight services, 16K MIPS is plenty.</p>
+<h3>Thermals</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Pi 5</th>
+<th>M720q</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Idle</td>
+<td>50.7 °C</td>
+<td>28.0 °C</td>
+</tr>
+<tr>
+<td>After sustained load</td>
+<td>54.0 °C</td>
+<td>39.0 °C</td>
+</tr>
+</tbody>
+</table>
+<p>The Pi idles at 51 °C with no undervoltage or throttle flags, and only climbs to 54 °C under load — the PoE supply reads 5.16 V, solid. The M720q's fan and larger heatsink keep it at a cool 28 °C idle, 39 °C loaded. Neither machine throttles, but if you're stacking three Pis in a closed 10-inch rack, their combined idle heat is worth thinking about. The M720q runs cooler despite doing more work.</p>
+<h2>The rack and 3D printing</h2>
+<p>Both machines sit in mounts I printed in PETG on a Bambu Lab P1S. The designs are community creations downloaded from Bambu Lab MakerWorld — I didn't design or model them. Assembly uses standard nuts and bolts, no heat-set inserts. PETG is commonly recommended for rack mounts because it handles higher temperatures than PLA (glass transition typically around 80 °C vs ~60 °C for PLA) and resists creep under sustained load, though I didn't do any formal strength or heat testing on these specific prints.</p>
+<p>If you're printing your own mounts, an <a class="aff" href="https://home-lab-bench.myshopify.com/products/m3-m4-metal-screw-pin-assortment-box-500-pieces-with-spanners" target="_blank">M3/M4 Metal Screw &amp; Pin Assortment Box – 500 Pieces with Spanners</a> is useful — M3 and M4 are the most common thread sizes for these community designs, and buying an assortment box is cheaper than hunting for individual bags.</p>
+<p>For keeping the M720q's fan clear of dust inside its tight chassis, a <a class="aff" href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</a> reaches where compressed air doesn't.</p>
+<h2>The PoE lesson</h2>
+<p>With the Pi connected to both PoE and its wall PSU, a breaker trip left it powered off when mains returned — the two power sources raced on restore. Running PoE only fixed it cleanly. Now, pulling the network cable and re-inserting it boots the Pi by itself. If you're running a Pi on PoE, commit to it: remove the wall PSU entirely.</p>
+<h2>The 5G backup</h2>
+<p>The UniFi U5G sits in the rack as WAN failover for the Cloud Gateway Fiber. It uses 5G RedCap (standalone only, with LTE fallback) and connects via a single Gigabit Ethernet port powered by 802.3af PoE. Published specs list 220 Mbps down / 120 Mbps up on 5G and 195 Mbps down on LTE. It takes one nano-SIM or one eSIM — not both simultaneously.</p>
+<p>I haven't measured my own speeds, latency, or failover time. One US reviewer on Google Fi with average indoor signal reportedly saw roughly 30–85 Mbps down and 1–3 Mbps up. The device needs a UniFi gateway running Network 10.4.57 or later; it won't work with a third-party router. If you're on a capped mobile data plan, turn off UniFi's Automatic Speed Test — it will burn through your allowance.</p>
+<h2>Who should NOT do this</h2>
+<p><strong>Don't buy a refurbished M720q if a Pi already covers your workload.</strong> If you're running Pi-hole, Home Assistant, and a few containers, the Pi 5's 105K random IOPS and 16K MIPS are more than enough. The M720q is worth it when you need virtualisation headroom, more RAM (32 GB vs the Pi's 16 GB max), or the sequential disk speed for file serving and backups.</p>
+<p><strong>Don't assume 3D-printed rack mounts are plug-and-play.</strong> Tolerances vary between printers, and PETG can warp if your bed adhesion isn't dialled in. Budget an evening for test fits and reprints.</p>
+<p><strong>Don't build a 10-inch rack expecting 2.5 GbE everywhere.</strong> Both machines as configured are 1 GbE. The M720q can take a 2.5 GbE NIC via its optional PCIe riser, but the Pi</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M3/M4 Metal Screw &amp; Pin Assortment Box – 500 Pieces with Spanners</span><span class=pr>£11.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m3-m4-metal-screw-pin-assortment-box-500-pieces-with-spanners" target="_blank">View →</a></div><div class=prow><span class=nm>JAKEHOE Fan Cleaner – Dust Removal Tool for Server &amp; NAS Fans</span><span class=pr>£9.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/jakehoe-fan-cleaner-dust-removal-tool-for-server-nas-fans" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div></div><div class=cap><h3>Free: Raspberry Pi Server Hardening Checklist</h3><p>Eighteen checks for locking down a Raspberry Pi server — keys-only SSH, mesh VPN instead of port forwarding, scoped firewall rules, and the <code>grep</code> that catches an API key before you push it.</p><ul class=pts><li>Every check runs on my own Pi — nothing theoretical</li><li>Exact commands, and why each one matters</li><li>Free. One email, then the occasional new build.</li></ul><form action="https://app.kit.com/forms/9961752/subscriptions" method="post" target="_blank"><input type="email" name="email_address" placeholder="you@example.com" aria-label="Email address" required><button type="submit">Send me the checklist</button></form><p class=fine>No spam, unsubscribe in one click. I never share or sell your address.</p></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
