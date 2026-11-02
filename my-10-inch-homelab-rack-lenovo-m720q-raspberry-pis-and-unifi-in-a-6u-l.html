@@ -1,0 +1,164 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>My 10-Inch Homelab Rack: Lenovo M720q, Raspberry Pis and UniFi in a 6U Lab Rax</title>
+<meta name=description content="A 6U Lab Rax build with a Lenovo M720q running Proxmox, Raspberry Pi 5s on PoE, and UniFi networking. Covers specs, thermals, and 3D-printed mounts."><link rel="canonical" href="https://homelabbench.com/my-10-inch-homelab-rack-lenovo-m720q-raspberry-pis-and-unifi-in-a-6u-l.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+
+.cap{border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:34px 0;
+ background:linear-gradient(180deg,rgba(0,0,0,.02),transparent)}
+.cap h3{margin:0 0 6px;font-size:1.05rem}
+.cap p{margin:0 0 14px;color:var(--mut);font-size:.92rem;line-height:1.5}
+.cap form{display:flex;gap:8px;flex-wrap:wrap}
+.cap input[type=email]{flex:1 1 240px;min-width:0;padding:10px 12px;font:inherit;
+ border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg)}
+.cap button{padding:10px 18px;font:inherit;font-weight:600;border:0;border-radius:7px;
+ background:var(--acc);color:#fff;cursor:pointer}
+.cap button:hover{opacity:.9}
+.cap .fine{margin:10px 0 0;font-size:.8rem;color:var(--mut)}
+.cap .pts{margin:0 0 14px;padding-left:18px;color:var(--mut);font-size:.9rem;line-height:1.6}
+@media print{.cap,.topbar,.disc,.shopbox{display:none}}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-11-02</p><h1>My 10-Inch Homelab Rack: Lenovo M720q, Raspberry Pis and UniFi in a 6U Lab Rax</h1>
+<p>A 10-inch rack lets you run real infrastructure — compute, networking, cellular backup — in a space that fits on a desk or a shelf. This is how I built mine around a Lenovo M720q running Proxmox and Raspberry Pi 5s, with UniFi networking and 3D-printed mounts holding it all together in a 6U Lab Rax frame.</p>
+<h2>What's Actually in the Rack</h2>
+<p>The rack is a 10-inch, 6U Lab Rax system. From top to bottom, it holds:</p>
+<ul>
+<li><strong>UniFi Cloud Gateway Fiber</strong> — the router and UniFi controller</li>
+<li><strong>UniFi USW Flex 2.5G 8 PoE</strong> switch — all ports PoE++, powering everything that takes PoE <a class="aff" href="https://www.amazon.co.uk/s?k=UniFi+USW+Flex+2.5G+8+PoE&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">UniFi USW Flex 2.5G 8 PoE</a></li>
+<li><strong>UniFi U5G</strong> — 5G cellular backup for WAN failover</li>
+<li><strong>Lenovo ThinkCentre M720q Tiny</strong> — in a 3D-printed rack mount <a class="aff" href="https://www.amazon.co.uk/s?k=Lenovo+ThinkCentre+M720q+Tiny&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">Lenovo ThinkCentre M720q Tiny</a></li>
+<li><strong>Raspberry Pis</strong> — in a 3D-printed three-Pi rack mount</li>
+</ul>
+<p>A <strong>UniFi U7 Pro XG</strong> access point sits outside the rack, powered by PoE from the same switch.</p>
+<p>That's the whole lab. Six units, no wasted space.</p>
+<h2>The Lenovo M720q: Why a Refurbished Tiny PC</h2>
+<p>I paid <strong>£345</strong> for the M720q refurbished in October 2026. That included 32 GB of RAM and a 1 TB Samsung PM9A1 NVMe — it came with Windows 11, which I wiped and replaced with <strong>Proxmox VE 9.2</strong> (Debian 13 base).</p>
+<p>The i5-9400T gives you six real cores at a 35 W TDP. There's one M.2 NVMe slot (occupied by the boot drive), one 2.5-inch SATA bay (empty — fits ~7 mm drives only), and a PCIe x8 slot available via an optional riser. Network is 1 GbE onboard (Intel I219-V); if you want 2.5 GbE, you'd need that PCIe riser plus a NIC.</p>
+<p>Right now it runs an LXC Samba file server, an LXC Syncthing instance backing up phone photos (16 GB, 4,181 files), and a nightly pull-backup of the Pi that I've restore-tested.</p>
+<h3>Idle resources tell the story</h3>
+<p>Proxmox with those three services running uses <strong>1.9 GB of RAM</strong>, leaving over 30 GB free. The CPU idles at <strong>28 °C</strong> and only reached <strong>39 °C</strong> after sustained load during benchmarks. That thermal headroom means I can keep stacking containers and VMs before I hit any limit.</p>
+<h2>The Raspberry Pi 5: Still Earning Its Keep</h2>
+<p>The Pi 5 (Model B Rev 1.1, 16 GB) boots from a Fanxiang S501Q 512 GB NVMe via the M.2 HAT on PCIe Gen 2. It runs <strong>Raspberry Pi OS / Debian 13 (trixie)</strong> and hosts <strong>13 always-on services</strong>: trading bots, a content pipeline, monitoring, and a dashboard.</p>
+<p>Power is <strong>PoE only</strong> from the switch — no wall PSU at all. I measured the 5V rail at <strong>5.16 V</strong> with no undervoltage or throttle flags.</p>
+<p>A lesson I learned the hard way: with the Pi on both PoE and its wall PSU, a breaker trip left it powered off when mains returned — the two sources raced on restore. Switching to PoE only fixed it. Now if I need to reboot the Pi, I just pull and re-insert the network cable and it boots by itself.</p>
+<p>Idle temperature is <strong>50.7 °C</strong>, rising to only <strong>54.0 °C</strong> under sustained load. Not alarming, but noticeably warmer than the M720q.</p>
+<h2>Head-to-Head: Real Numbers from the Same Tests</h2>
+<p>I ran identical benchmarks on both machines — fio with 1M sequential and 4K random at QD32, direct I/O, 15 seconds each, plus the 7-Zip built-in benchmark. Here's what I got:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Lenovo M720q (i5-9400T)</th>
+<th>Raspberry Pi 5</th>
+<th>Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential read</td>
+<td>3,424 MB/s</td>
+<td>452 MB/s</td>
+<td><strong>7.6×</strong></td>
+</tr>
+<tr>
+<td>Sequential write</td>
+<td>3,242 MB/s</td>
+<td>431 MB/s</td>
+<td>7.5×</td>
+</tr>
+<tr>
+<td>Random 4K read (QD32)</td>
+<td>158,595 IOPS</td>
+<td>104,978 IOPS</td>
+<td><strong>1.5×</strong></td>
+</tr>
+<tr>
+<td>7-Zip single-thread</td>
+<td>5,473 MIPS</td>
+<td>4,463 MIPS</td>
+<td><strong>1.2×</strong></td>
+</tr>
+<tr>
+<td>7-Zip all-threads</td>
+<td>29,506 MIPS</td>
+<td>16,011 MIPS</td>
+<td><strong>1.8×</strong></td>
+</tr>
+<tr>
+<td>CPU temp idle</td>
+<td>28.0 °C</td>
+<td>50.7 °C</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CPU temp after load</td>
+<td>39.0 °C</td>
+<td>54.0 °C</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The sequential read gap is mostly the drive pairing — the Samsung PM9A1 on a full PCIe Gen 3 ×4 link versus the Fanxiang on the Pi's Gen 2 ×1. Random 4K is closer because at that block size, the NVMe controller matters more than raw bandwidth. CPU-wise, the M720q's two extra cores give it a clear multi-thread lead, while single-thread is only 23% ahead — the Cortex-A76 is a strong core.</p>
+<p>Both machines sit on 1 GbE as configured, so network throughput is identical for now.</p>
+<h2>3D-Printed Rack Mounts</h2>
+<p>Both the M720q mount and the three-Pi mount were printed on a <strong>Bambu Lab P1S</strong> in <strong>PETG</strong>, using community designs downloaded from <strong>Bambu Lab MakerWorld</strong> (I didn't design them — credit goes to those communities). I didn't record the specific designer names or model links, print settings, infill, or print times.</p>
+<p>Assembly is straightforward: <strong>nuts and bolts</strong>, no heat-set inserts. Everything clamps onto the 10-inch rack rails. The M720q mount holds the machine securely on its side; the Pi mount stacks three boards vertically in one rack unit.</p>
+<p>PETG is commonly recommended for rack mounts because it handles heat better than PLA — most people print it around 230–250 °C with a 70–80 °C bed. I didn't do any formal strength or heat-deflection testing, but after months of continuous use with the machines running 24/7, nothing has sagged or deformed.</p>
+<p>If you're assembling printed rack mounts, an assortment box of M3/M4 hardware saves repeated trips to the hardware shop: <a class="aff" href="https://home-lab-bench.myshopify.com/products/m3-m4-metal-screw-pin-assortment-box-500-pieces-with-spanners" target="_blank">M3/M4 Metal Screw &amp; Pin Assortment Box – 500 Pieces with Spanners</a>.</p>
+<h2>The U5G: 5G Backup Internet</h2>
+<p>The UniFi U5G sits in the rack as WAN failover for the Cloud Gateway Fiber. If my fibre goes down, traffic routes through cellular automatically.</p>
+<p>I haven't measured speeds, latency, signal strength, or failover time on my own connection — I don't have those numbers. What I can share from published specs: the U5G supports <strong>5G RedCap (standalone only, no NSA) with LTE fallback</strong>, rated at up to <strong>220 Mbps down / 120 Mbps up on 5G</strong> and <strong>195 Mbps down on LTE</strong>. It has one Gigabit Ethernet port, powered by 802.3af PoE, and takes one nano-SIM or one eSIM (not both simultaneously).</p>
+<p>One US reviewer testing on Google Fi with average indoor signal reportedly saw roughly <strong>30–85 Mbps down and 1–3 Mbps up</strong> — well below the spec-sheet maximums. The U5G Max, which is a different and more expensive device, reportedly managed 300+ Mbps down in the same spot.</p>
+<p>Practical notes from the wider community: turn off UniFi Automatic Speed Test if you're on a capped data plan, and switch cellular data off before changing SIMs. The U5G requires a UniFi gateway running Network 10.4.57 or later — it won't work with a third-party router. <a class="aff" href="https://www.amazon.co.uk/s?k=UniFi+U5G+Max&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">UniFi U5G Max</a></p>
+<h2>Who Should NOT Do This</h2>
+<ul>
+<li><strong>If you need raw compute density</strong>, a single mini-PC outperforms a Pi so heavily on multi-thread (1.8×) and storage (7.6× sequential) that running multiple Pis as a "cluster" for general workloads is hard to justify. A second refurbished TinyMiniM</li>
+</ul></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>M3/M4 Metal Screw &amp; Pin Assortment Box – 500 Pieces with Spanners</span><span class=pr>£11.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m3-m4-metal-screw-pin-assortment-box-500-pieces-with-spanners" target="_blank">View →</a></div><div class=prow><span class=nm>The Homelab Agent Kit — 9 AI Agents, 13-Chapter Build Guide, Python</span><span class=pr>£29.00</span><a class=go href="https://home-lab-bench.myshopify.com/products/homelab-agent-kit" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA USB External Aluminium Case</span><span class=pr>£26.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-external-aluminium-case" target="_blank">View →</a></div></div><div class=cap><h3>Free: Raspberry Pi Server Hardening Checklist</h3><p>Eighteen checks for locking down a Raspberry Pi server — keys-only SSH, mesh VPN instead of port forwarding, scoped firewall rules, and the <code>grep</code> that catches an API key before you push it.</p><ul class=pts><li>Every check runs on my own Pi — nothing theoretical</li><li>Exact commands, and why each one matters</li><li>Free. One email, then the occasional new build.</li></ul><form action="https://app.kit.com/forms/9961752/subscriptions" method="post" target="_blank"><input type="email" name="email_address" placeholder="you@example.com" aria-label="Email address" required><button type="submit">Send me the checklist</button></form><p class=fine>No spam, unsubscribe in one click. I never share or sell your address.</p></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
