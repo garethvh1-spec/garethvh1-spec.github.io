@@ -1,0 +1,112 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Raspberry Pi 5 Won&#x27;t Power Back On After a Power Cut? The PoE and PSU Restore Problem</title>
+<meta name=description content="Raspberry Pi 5 stays off after a power cut on PoE? Learn why dual USB-C and PoE sources cause a boot race and how to fix it with EEPROM settings."><link rel="canonical" href="https://homelabbench.com/raspberry-pi-5-won-t-power-back-on-after-a-power-cut-the-poe-and-psu-r.html"><meta name="google-site-verification" content="hibghOlhw2WjjMr-c8EwC64jh9lda-s7eLk-Wll74Gg"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#1a2332;--mut:#5b6b7f;--acc:#16a34a;--acc2:#0e7a37;--bd:#e2e8f0;--bg:#ffffff;--tint:#f0fdf4;--card:#f8fafc}
+@media(prefers-color-scheme:dark){:root{--fg:#e6edf3;--mut:#8b98a9;--acc:#22c55e;--acc2:#4ade80;--bd:#26313f;--bg:#0d131b;--tint:#12211a;--card:#131b26}}
+*{box-sizing:border-box}
+body{font:17px/1.7 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg);background:var(--bg);margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 40px}
+a{color:var(--acc2);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3,.logo,.card a{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+h1{font-size:29px;line-height:1.25;margin:.4em 0;letter-spacing:-.5px}
+h2{font-size:21px;margin-top:1.7em}h3{font-size:18px}
+code{background:rgba(128,128,128,.14);padding:2px 6px;border-radius:5px;font-size:.88em}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:1em 0}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}th{background:var(--card)}
+.topbar{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--bd);margin-bottom:26px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;text-decoration:none;color:var(--fg);letter-spacing:-.5px}
+.logo .p{color:var(--acc);font-weight:700}
+.nav{margin-left:auto;display:flex;gap:16px}
+.nav a{text-decoration:none;color:var(--mut);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--acc2)}
+.nav a.shopbtn{color:#fff;background:var(--acc);padding:6px 14px;border-radius:999px;font-weight:600}
+.nav a.shopbtn:hover{background:var(--acc2);color:#fff}
+.tag{color:var(--mut);font-size:15px;margin:-14px 0 22px}
+.mut{color:var(--mut)}
+.card{border:1px solid var(--bd);border-radius:12px;padding:18px;margin:14px 0;background:var(--card);transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card a{font-size:18px;font-weight:600;text-decoration:none}
+.card .d{font-size:13px;color:var(--mut);margin:0 0 4px}
+.aff{font-weight:600}
+.shopbox{border:1px solid var(--acc);border-radius:12px;background:var(--tint);padding:16px 18px;margin:30px 0}
+.shopbox h3{margin:0 0 4px;font-size:16px}
+.shopbox .sub{font-size:13px;color:var(--mut);margin:0 0 10px}
+.prow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--bd);font-size:15px}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;min-width:0}
+.prow .pr{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.prow .go{color:#fff;background:var(--acc);border-radius:8px;padding:4px 12px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.prow .go:hover{background:var(--acc2)}
+.disc{font-size:13px;color:var(--mut);border-top:1px solid var(--bd);margin-top:40px;padding-top:16px}
+.disc a{color:var(--mut)}
+
+.cap{border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:34px 0;
+ background:linear-gradient(180deg,rgba(0,0,0,.02),transparent)}
+.cap h3{margin:0 0 6px;font-size:1.05rem}
+.cap p{margin:0 0 14px;color:var(--mut);font-size:.92rem;line-height:1.5}
+.cap form{display:flex;gap:8px;flex-wrap:wrap}
+.cap input[type=email]{flex:1 1 240px;min-width:0;padding:10px 12px;font:inherit;
+ border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg)}
+.cap button{padding:10px 18px;font:inherit;font-weight:600;border:0;border-radius:7px;
+ background:var(--acc);color:#fff;cursor:pointer}
+.cap button:hover{opacity:.9}
+.cap .fine{margin:10px 0 0;font-size:.8rem;color:var(--mut)}
+.cap .pts{margin:0 0 14px;padding-left:18px;color:var(--mut);font-size:.9rem;line-height:1.6}
+@media print{.cap,.topbar,.disc,.shopbox{display:none}}
+</style></head><body><div class=wrap>
+<div class=topbar>
+ <a class=logo href="/"><span class=p>&gt;_</span> THE HOMELAB BENCH</a>
+ <nav class=nav><a href="/">Articles</a><a class=shopbtn href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a></nav>
+</div>
+<article><p class=mut>2026-11-23</p><h1>Raspberry Pi 5 Won't Power Back On After a Power Cut? The PoE and PSU Restore Problem</h1>
+<p>If your Raspberry Pi 5 stays dark after a power outage despite being on PoE, the most likely cause is a conflict between the PoE HAT and a USB-C wall PSU connected at the same time — the two power sources race on restore, and the Pi loses. The fix is straightforward: pick one power source, configure the EEPROM, and optionally put a UPS upstream.</p>
+<h2>What Actually Happens (and How I Found It)</h2>
+<p>My Raspberry Pi 5 (16 GB, Raspberry Pi OS / Debian 13 trixie) sits in a 10-inch 6U Lab Rax rack, powered exclusively by PoE from a <a class="aff" href="https://www.amazon.co.uk/s?k=UniFi+USW+Flex+2.5G+8+PoE&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">UniFi USW Flex 2.5G 8 PoE</a> switch. It runs 13 always-on services — trading bots, a content pipeline, monitoring, a dashboard — so an unexpected reboot that doesn't actually reboot is a real problem.</p>
+<p>Early on I had both the PoE+ HAT and the official USB-C PSU connected. The logic was belt-and-braces: if the switch reboots, the wall PSU keeps the Pi alive. In practice, when a breaker tripped and mains returned, the Pi stayed off. The two sources raced on restore and the Pi never cleanly powered up. It took pulling the USB-C cable and cycling PoE (unplug the Ethernet cable, re-insert) to bring it back.</p>
+<p>The fix was simple: <strong>remove the wall PSU entirely and run PoE only.</strong> Since then, pulling the network cable and re-inserting it boots the Pi by itself, every time. No more dead Pi after a power cut.</p>
+<h2>Why the Dual-Source Race Happens</h2>
+<p>The Pi 5's power path isn't designed for two independent supplies fighting to assert 5 V on the same rail. The PoE HAT's DC-DC converter and the USB-C PD negotiation operate on different timescales. When mains returns simultaneously to both, the PMIC can see an indeterminate state — voltage present but not stable enough to trigger a clean boot. The Pi doesn't crash; it simply never starts.</p>
+<p>This isn't unique to any particular PoE HAT. Any setup where USB-C and PoE restore at the same instant can exhibit it. The Pi 5's PMIC is more complex than the Pi 4's, and anecdotally more sensitive to this race.</p>
+<h2>The EEPROM Power-On Setting</h2>
+<p>Even on a single power source, the Pi 5 defaults to staying off after power loss — it waits for a button press or a power cycle. You need to change the EEPROM configuration:</p>
+<pre><code class="language-bash">sudo rpi-eeprom-config --edit
+</code></pre>
+<p>Find or add:</p>
+<pre><code>POWER_OFF_ON_HALT=0
+WAKE_ON_GPIO=0
+</code></pre>
+<p>The critical line is:</p>
+<pre><code>POWER_ON_WHEN_VBUS=1
+</code></pre>
+<p>This tells the PMIC: "When you see voltage appear on the power input, boot immediately." Save, reboot, and the Pi will now auto-start whenever power is applied — whether that's PoE coming up or a USB-C PSU being plugged in.</p>
+<p><strong>Note:</strong> If you're on PoE only, <code>POWER_ON_WHEN_VBUS=1</code> means the Pi boots the moment the switch port comes up. That's exactly what you want for a headless server.</p>
+<h2>PoE-Only: What I Measured</h2>
+<p>With the wall PSU removed and the Pi running purely from PoE via the switch, I measured 5.16 V on the 5 V rail. No undervoltage warnings, no throttle flags. The Pi idles at 50.7 °C and reaches only 54.0 °C under sustained CPU load. That's with the PoE HAT's own fan running — not the active cooler.</p>
+<p>For context, the Fanxiang S501Q 512 GB NVMe (via the M.2 HAT at PCIe gen 2) delivers 452 MB/s sequential read and 431 MB/s sequential write, with 104,978 random read IOPS at QD32. The 7-Zip benchmark scores 4,463 MIPS single-threaded and 16,011 MIPS across all four Cortex-A76 cores. None of those numbers change between PoE-only and dual-source power — the problem isn't performance, it's whether the Pi starts at all.</p>
+<h2>Protecting the Upstream: UPS Placement</h2>
+<p>The smarter long-term solution is to put a UPS before the switch, not before the Pi. If the switch stays up, PoE stays up, and the Pi never loses power in the first place.</p>
+<p>A <a class="aff" href="https://www.amazon.co.uk/s?k=CyberPower+BR1200ELCD+UPS&tag=homelabbench-21" rel="nofollow sponsored" target="_blank">CyberPower BR1200ELCD UPS</a> or similar line-interactive unit upstream of the switch protects everything the switch powers: the Pi, any access points (my rack includes a UniFi U7 Pro XG on PoE from the same switch), and the switch's own brain. The manufacturer spec-sheet maximums for my rack's contents — UCG Fiber at 29.4 W, the Flex switch at 17 W own draw, U7 Pro XG at 22 W — suggest a modest total, but I haven't measured actual wall draw, so I can't give a real runtime estimate. Size the UPS to your own measured load.</p>
+<p>My rack also contains a UniFi U5G for 5G cellular WAN failover to the Cloud Gateway Fiber. It's powered by 802.3af PoE from the switch, so the same UPS covers it. I haven't measured its speeds, failover time, or signal — published specs list 220 Mbps down / 120 Mbps up on 5G and 195 Mbps on LTE fallback, but real-world results vary with carrier and signal. One US reviewer reported roughly 30–85 Mbps down on Google Fi indoors. The point for this article: it's one more device that benefits from the switch staying alive through a power cut.</p>
+<h2>The Physical Setup</h2>
+<p>The Pi sits in a 3D-printed rack mount that holds three Raspberry Pis, printed in PETG on a Bambu Lab P1S from a community design downloaded from Bambu Lab MakerWorld. The M720q (my Proxmox host, which nightly backs up the Pi) sits in its own 3D-printed rack mount, also a MakerWorld community design in PETG. Both mounts are assembled with nuts and bolts — no heat-set inserts. <a class="aff" href="https://home-lab-bench.myshopify.com/products/m3-m4-metal-screw-pin-assortment-box-500-pieces-with-spanners" target="_blank">M3/M4 Metal Screw &amp; Pin Assortment Box – 500 Pieces with Spanners</a> PETG is commonly recommended for rack mounts because it handles the moderate heat inside an enclosed 10-inch rack better than PLA, though I didn't do any formal heat or strength testing on these prints.</p>
+<h2>Step-by-Step Fix</h2>
+<ol>
+<li><strong>Decide on one power source.</strong> For a rack with a PoE switch, PoE-only is cleaner. Remove the USB-C PSU.</li>
+<li><strong>Set the EEPROM.</strong> <code>POWER_ON_WHEN_VBUS=1</code> so the Pi boots when PoE voltage appears.</li>
+<li><strong>Test it.</strong> Pull the Ethernet cable, wait five seconds, re-insert. The Pi should boot unattended.</li>
+<li><strong>Add a UPS upstream of the switch</strong>, not on the Pi itself. This prevents the whole scenario.</li>
+<li><strong>Monitor from outside.</strong> If you run critical services on the Pi, a nightly backup to another machine (mine goes to the M720q's Proxmox host, and that backup has been restore-tested) means a dead SD card or corrupted NVMe isn't catastrophic.</li>
+</ol>
+<h2>Who Should NOT Do This</h2>
+<p>If your Pi must survive a switch reboot or switch firmware update (which cycles all PoE ports), PoE-only means it goes down with the switch. In that case, USB-C PSU only — no PoE HAT installed — is the safer choice, and you set the same EEPROM flag. The key is <strong>one source</strong>, not which one.</p>
+<p>Also, if you're running from an SD card rather than NVMe, repeated unclean shutdowns from power cuts will eventually corrupt the filesystem regardless of boot configuration. A UPS or at least an <code>overlayfs</code> read-only root is worth considering.</p>
+<h2>Verdict</h2>
+<p>The Pi 5's dual-power-source race is a real and common failure mode — remove one source, set <code>POWER_ON_WHEN_VBUS=1</code> in the EEPROM, and put a UPS before the switch. My Pi has been on PoE-only since I found this, drawing a stable 5.16 V with no throttling, and it boots unattended every time power returns.</p></article><div class=shopbox><h3>🛠️ From the bench shop</h3><p class=sub>Gear from our own store that fits this build — shipped tracked, UK support.</p><div class=prow><span class=nm>240W USB-C Fast-Charging &amp; Data Cable – Braided, LED Indicator</span><span class=pr>£5.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/240w-usb-c-fast-charging-data-cable-braided-led-indicator" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 NVMe SSD Enclosure – USB-C 10Gbps with Magnetic Closure</span><span class=pr>£36.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-nvme-ssd-enclosure-usb-c-10gbps-with-magnetic-closure" target="_blank">View →</a></div><div class=prow><span class=nm>M.2 SSD Enclosure – NVMe &amp; SATA, USB 3.1 Gen2 Type-C, Aluminium</span><span class=pr>£66.99</span><a class=go href="https://home-lab-bench.myshopify.com/products/m-2-ssd-enclosure-nvme-sata-usb-3-1-gen2-type-c-aluminium" target="_blank">View →</a></div></div><div class=cap><h3>Free: Raspberry Pi Server Hardening Checklist</h3><p>Eighteen checks for locking down a Raspberry Pi server — keys-only SSH, mesh VPN instead of port forwarding, scoped firewall rules, and the <code>grep</code> that catches an API key before you push it.</p><ul class=pts><li>Every check runs on my own Pi — nothing theoretical</li><li>Exact commands, and why each one matters</li><li>Free. One email, then the occasional new build.</li></ul><form action="https://app.kit.com/forms/9961752/subscriptions" method="post" target="_blank"><input type="email" name="email_address" placeholder="you@example.com" aria-label="Email address" required><button type="submit">Send me the checklist</button></form><p class=fine>No spam, unsubscribe in one click. I never share or sell your address.</p></div><p><a href="/">← all articles</a></p>
+<div class=disc>Some links are affiliate links — if you buy through them I may earn a small
+commission at no extra cost to you. Benchmarks are run on my own hardware.
+· <a href="https://home-lab-bench.myshopify.com" target="_blank">Shop</a> · <a href="mailto:gareth@homelabbench.com">Contact</a></div>
+</div></body></html>
